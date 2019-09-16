@@ -8,13 +8,13 @@ pip install cocore
 ```
 ## Modules
 Cocloud contains interaction classes for the following aws servies
-*S3
-*Athena
-*SES
-*SNS
-*SQS
-*ECS
-*CloudWatch Logs
+* S3
+* Athena
+* SES
+* SNS
+* SQS
+* ECS
+* CloudWatch Logs
 
 ## Development
 
