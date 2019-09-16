@@ -3,13 +3,13 @@ from distutils.core import setup
 setup(
   name = 'cocloud',
   packages = ['cocloud'],
-  version = 0.1,
+  version = 0.2,
   license='MIT',
   description = 'of common code utility for aws services',
   author = 'Paul Singman',
   author_email = 'paul.singman@equinox.com',
   url = 'https://github.com/equinoxfitness/datacoco.cloud',
-  download_url = 'https://github.com/equinoxfitness/datacoco.cloud/archive/0.1.tar.gz',
+  download_url = 'https://github.com/equinoxfitness/datacoco.cloud/archive/v-0.2.tar.gz',
   keywords = ['helper', 'config', 'logging', 'common'],   # Keywords that define your package best
   install_requires=[
       'requests==2.20.0',
