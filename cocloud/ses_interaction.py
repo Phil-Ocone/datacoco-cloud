@@ -1,5 +1,4 @@
 import boto3
-from cocore.config import Config
 from past.builtins import basestring
 
 
@@ -49,7 +48,7 @@ class SESInteraction:
         :return:
         """
         body = self._html
-        
+
         if isinstance(self.to, basestring):
             self.to = [self.to]
         if not from_addr:

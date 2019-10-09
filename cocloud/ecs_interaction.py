@@ -5,8 +5,6 @@ this module provides basic interaction with aws ecs service
 import gevent.monkey
 gevent.monkey.patch_all()
 
-from pprint import pprint
-from time import sleep
 import boto3
 from cocore.config import Config
 
@@ -32,8 +30,8 @@ class ECSInteraction:
     def wait_task(self, cluster, tasks):
         """Wait for task to finish"""
         waiter = self.conn.get_waiter('tasks_stopped')
-        response = waiter.wait(cluster=cluster, tasks=tasks,
-                               WaiterConfig={'Delay': 10, 'MaxAttempts': 720})
+        waiter.wait(cluster=cluster, tasks=tasks,
+                    WaiterConfig={'Delay': 10, 'MaxAttempts': 720})
 
     def get_task_definition(self, task):
         resp = self.conn.describe_task_definition(taskDefinition=task)
@@ -198,6 +196,5 @@ class ECSInteraction:
             print('There be {} successful task(s) with logs :)'.format(len(taskArns)))
         else:
             print('There be unsuccessful task(s) with logs :(')
-    
 
         return taskArns, success, logs_stream_prefix, logs_group

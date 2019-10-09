@@ -84,15 +84,15 @@ class AthenaInteraction:
             if partitions is None:
                 sql = 'MSCK REPAIR TABLE {}'.format(table)
             else:
-                if type(partitions) is not dict and type(partitions) is not list:
+                if !isinstance(partitions, dict) and !isinstance(partitions, list):
                     raise Exception('Partitions must be passed as a dict or list')
-                if type(partitions) is list:
+                if isinstance(partitions, list):
                     part_str = ''
                     for d in partitions:
                         each_partition = ','.join([i + '=\'' + d[i] + '\'' for i in d])
                         part_str += ' partition ({})'.format(each_partition)
                     sql = """ALTER TABLE {} add{}""".format(table, part_str)
-                elif type(partitions) is dict:
+                elif isinstance(partitions, dict):
                     part_str = ','.join([i + '=\'' + partitions[i] + '\'' for i in partitions])
                     sql = """ALTER TABLE {} add partition ({})""".format(table, part_str)
                 if s3_data is not None:
@@ -104,12 +104,15 @@ class AthenaInteraction:
             raise e
 
     def run_existing_query(self, query_name, output_location=None,
-                           optional_vars=[]):
+                           optional_vars=None):
         """
         Will find query by its string name and return the sql and db name
         Optional vars allows dynamic variables to be passed to a saved query
         Optional vars can be a list or tuple. Be sure to escape quotes for strings
         """
+        if optional_vars is None:
+            optional_vars = []
+
         try:
             response = self.search_queries_by_name(query_name)
             sql, db = response['QueryString'].format(
@@ -194,7 +197,7 @@ class AthenaInteraction:
 
     def format_results(self, results, delimiter):
         data_table = ''
-        for index, row in enumerate(results['ResultSet']['Rows']):
+        for row in results['ResultSet']['Rows']:
             temp_row = []
             for values in row['Data']:
                 if 'VarCharValue' in values:
@@ -213,7 +216,7 @@ class AthenaInteraction:
             values = [value['VarCharValue'] for value in row['Data']]
             if len(values) == 1:
                 formatted_results.append(values[0])  # keep as string
-            else:    
+            else:
                 formatted_results.append((*values,))  # turn list into tuple
 
         return formatted_results

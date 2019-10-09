@@ -109,7 +109,7 @@ class Subscriber(object):
         try:
             receipt_handle = message['ReceiptHandle']
             print(f'Receipt handle: {receipt_handle}')
-        except:
+        except Exception as e:
             print('Issue retrieving message handle:')
             return
 
