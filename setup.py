@@ -1,12 +1,13 @@
-from distutils.core import setup
+from setuptools import setup
 
 setup(
   name = 'cocloud',
   packages = ['cocloud'],
-  version = 0.2,
+  version = '0.2.1',
   license='MIT',
   description = 'of common code utility for aws services',
   long_description=open("README.md").read(),
+  long_description_content_type="text/markdown",
   author = 'Paul Singman',
   author_email = 'paul.singman@equinox.com',
   url = 'https://github.com/equinoxfitness/datacoco.cloud',
