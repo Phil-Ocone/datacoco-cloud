@@ -6,6 +6,7 @@ setup(
   version = 0.2,
   license='MIT',
   description = 'of common code utility for aws services',
+  long_description=open("README.md").read(),
   author = 'Paul Singman',
   author_email = 'paul.singman@equinox.com',
   url = 'https://github.com/equinoxfitness/datacoco.cloud',
