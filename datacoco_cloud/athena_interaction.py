@@ -6,7 +6,7 @@ from time import sleep
 
 
 class AthenaInteraction:
-    def __init__(self, aws_access_key, aws_secret_key, region=None,  aws_account_id=None):
+    def __init__(self, aws_access_key, aws_secret_key, region=None):
         try:
             self.client = boto3.client('athena',
                                        region_name=region,
@@ -16,9 +16,6 @@ class AthenaInteraction:
             print("Connected to Athena client")
         except Exception as e:
             raise e
-
-    self.aws_account_id = aws_account_id
-    self.region = region
 
     def store_query(self, name, description, db, sql):
         """
@@ -84,15 +81,15 @@ class AthenaInteraction:
             if partitions is None:
                 sql = 'MSCK REPAIR TABLE {}'.format(table)
             else:
-                if !isinstance(partitions, dict) and !isinstance(partitions, list):
+                if type(partitions) is not dict and type(partitions) is not list:
                     raise Exception('Partitions must be passed as a dict or list')
-                if isinstance(partitions, list):
+                if type(partitions) is list:
                     part_str = ''
                     for d in partitions:
                         each_partition = ','.join([i + '=\'' + d[i] + '\'' for i in d])
                         part_str += ' partition ({})'.format(each_partition)
                     sql = """ALTER TABLE {} add{}""".format(table, part_str)
-                elif isinstance(partitions, dict):
+                elif type(partitions) is dict:
                     part_str = ','.join([i + '=\'' + partitions[i] + '\'' for i in partitions])
                     sql = """ALTER TABLE {} add partition ({})""".format(table, part_str)
                 if s3_data is not None:
@@ -104,15 +101,12 @@ class AthenaInteraction:
             raise e
 
     def run_existing_query(self, query_name, output_location=None,
-                           optional_vars=None):
+                           optional_vars=[]):
         """
         Will find query by its string name and return the sql and db name
         Optional vars allows dynamic variables to be passed to a saved query
         Optional vars can be a list or tuple. Be sure to escape quotes for strings
         """
-        if optional_vars is None:
-            optional_vars = []
-
         try:
             response = self.search_queries_by_name(query_name)
             sql, db = response['QueryString'].format(
@@ -157,20 +151,21 @@ class AthenaInteraction:
         return results, execution_details
 
     def exec_query(self, query, db_name, output_location=None,
-                   encryption='SSE_S3', kms_key=''):
+                   encryption='SSE_S3', kms_key='', workgroup='primary'):
         """
         Executes an athena query
         Can be called directly or via run_existing_query()
         Encryption options are: SSE_S3 | SSE_KMS | CSE_KMS
         """
         if output_location is None:
-            output_location = f's3://aws-athena-query-results-{self.aws_account_id}-{self.region}/python/'
+            output_location = 's3://aws-athena-query-results-813561490937-us-east-1/python/'
         response = self.client.start_query_execution(
             QueryString=query,
             QueryExecutionContext={'Database': db_name},
             ResultConfiguration={
                 'OutputLocation': output_location,
-                'EncryptionConfiguration': {'EncryptionOption': encryption, 'KmsKey': kms_key}}
+                'EncryptionConfiguration': {'EncryptionOption': encryption, 'KmsKey': kms_key}},
+            WorkGroup=workgroup
         )
 
         # Wait a few seconds before seeing if the results are ready
@@ -197,7 +192,7 @@ class AthenaInteraction:
 
     def format_results(self, results, delimiter):
         data_table = ''
-        for row in results['ResultSet']['Rows']:
+        for index, row in enumerate(results['ResultSet']['Rows']):
             temp_row = []
             for values in row['Data']:
                 if 'VarCharValue' in values:

@@ -2,7 +2,6 @@ import gevent.monkey
 gevent.monkey.patch_all()
 
 import boto3
-from cocore.config import Config
 from datetime import datetime
 
 DATE_FMT = "%Y-%m-%d %H:%M:%S"
@@ -13,13 +12,8 @@ class CWLInteraction:
     Wrapper on boto3 CloudWatch logs
     """
 
-    def __init__(self, region=None):
-        conf = Config()
-        aws_access_key = conf['ECS']['aws_access_key']
-        aws_secret_key = conf['ECS']['aws_secret_key']
+    def __init__(self, region=None, aws_access_key=None, aws_secret_key=None):
 
-        if region is None:
-            region = conf['ECS']['aws_region']
 
         try:
             self.client = boto3.client(

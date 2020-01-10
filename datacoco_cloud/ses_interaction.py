@@ -1,4 +1,5 @@
 import boto3
+from cocore.config import Config
 from past.builtins import basestring
 
 
@@ -6,6 +7,7 @@ class SESInteraction:
     """
     wrapper on boto3 ses
     """
+
     def __init__(self, to, subject, sender, aws_access_key, aws_secret_key, aws_region='us-east-1'):
         """
         :param to:
@@ -14,9 +16,9 @@ class SESInteraction:
         """
 
         self.connection = boto3.client('ses',
-                                        aws_access_key_id=aws_access_key,
-                                        aws_secret_access_key=aws_secret_key,
-                                        region_name=aws_region)
+                                       aws_access_key_id=aws_access_key,
+                                       aws_secret_access_key=aws_secret_key,
+                                       region_name=aws_region)
 
         self.to = to
         self.subject = subject
@@ -60,12 +62,12 @@ class SESInteraction:
             body = self._text
 
         return self.connection.send_email(
-            Source = from_addr,
-            Destination = {
+            Source=from_addr,
+            Destination={
                 'ToAddresses': self.to
             },
-            Message = {
-                'Subject':{
+            Message={
+                'Subject': {
                     'Data': self.subject
                 },
                 'Body': {
@@ -78,3 +80,21 @@ class SESInteraction:
                 }
             }
         )
+
+
+if __name__ == '__main__':
+    """
+    sending email sample run
+    """
+    conf = Config()
+    aws_access_key = conf['aws']['aws_access_key']
+    aws_secret_key = conf['aws']['aws_secret_key']
+    aws_region = conf['aws']['aws_region']
+    email = SESInteraction(conf['ses']['ses_def_recipient'],
+                           'Sample Email', conf['ses']['ses_def_sender'],
+                           aws_access_key, aws_secret_key, aws_region
+                           )
+    email.html("<b>Sample Message</b>")
+    email.text('Sample Message')
+    email.send()
+    print('Email sent!')

@@ -121,4 +121,3 @@ class Subscriber(object):
 
 class NoSuchQueueException(Exception):
     pass
-

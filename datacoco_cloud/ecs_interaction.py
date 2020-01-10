@@ -6,26 +6,21 @@ import gevent.monkey
 gevent.monkey.patch_all()
 
 import boto3
-from cocore.config import Config
 
 
 class ECSInteraction:
     """
     wrapper on boto3 ecs
     """
-    def __init__(self, config_settings='ECS'):
+    def __init__(self, aws_access_key, aws_secret_key, region_name='us-east-1'):
         """
 
         :return:
         """
-        conf = Config()[config_settings]
-
-        aws_access_key = conf['aws_access_key']
-        aws_secret_key = conf['aws_secret_key']
         self.conn = boto3.client('ecs',
                                  aws_access_key_id=aws_access_key,
                                  aws_secret_access_key=aws_secret_key,
-                                 region_name='us-east-1')
+                                 region_name=region_name)
 
     def wait_task(self, cluster, tasks):
         """Wait for task to finish"""
@@ -54,7 +49,7 @@ class ECSInteraction:
 
         if response['failures'] != []:
             raise Exception('There were failures:\n{0}'.format(
-            response['failures']))
+                response['failures']))
 
         statuses = [t['lastStatus'] for t in response['tasks']]
 
@@ -68,7 +63,8 @@ class ECSInteraction:
         else:
             # only get exit reasons for unsuccessful tasks
             print('Unsuccessful tasks exited with reason(s): ' + \
-                ", ".join([t['stoppedReason'] for t in response['tasks'] for c in t['containers'] if c['exitCode'] != 0]))
+                  ", ".join(
+                      [t['stoppedReason'] for t in response['tasks'] for c in t['containers'] if c['exitCode'] != 0]))
             return False
 
     @staticmethod
@@ -96,7 +92,7 @@ class ECSInteraction:
 
         defaults = self.get_task_definition(task_definition)
 
-        logs_stream_prefix, logs_group = self.get_logs_info(defaults) # assumes uses aws logs?
+        logs_stream_prefix, logs_group = self.get_logs_info(defaults)  # assumes uses aws logs?
 
         container_defaults = defaults['taskDefinition']['containerDefinitions'][0]
 
@@ -171,7 +167,7 @@ class ECSInteraction:
                 count=count,
                 networkConfiguration=network_config)
 
-        else: # regular ec2
+        else:  # regular ec2
 
             response = self.conn.run_task(
                 cluster=cluster,

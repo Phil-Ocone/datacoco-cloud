@@ -113,14 +113,19 @@ class S3Interaction:
         """
         self.s3.Object(bucket, key).put(Body=string_data)
 
-    def put_file_to_s3(self, bucket, key, local_filename):
+    def put_file_to_s3(self, bucket, key, local_filename, acl=False):
         """Create key from local file.
 
         :param bucket: (str) Name of bucket.
         :param key: (str) Name of key.
         :param local_filename: (str) Name of file to be uploaded.
+        :param acl: enable ACL
         """
-        self.s3.meta.client.upload_file(local_filename, bucket, key)
+        if acl:
+            self.s3.meta.client.upload_file(local_filename, bucket, key, ExtraArgs={'ACL': 'bucket-owner-full-control'})
+        else:
+            self.s3.meta.client.upload_file(local_filename, bucket, key)
+
 
     def put_fileobj_to_s3(self, bucket, key, fileobj):
         """Create key from a byte-array.
