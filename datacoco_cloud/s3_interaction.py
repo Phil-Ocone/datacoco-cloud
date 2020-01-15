@@ -8,15 +8,27 @@ class S3Interaction:
     """
     Class to simplify interacting with S3 using boto3
     """
-    def __init__(self, aws_access_key, aws_secret_key):
-        self.client = boto3.client('s3',
-                                   aws_access_key_id=aws_access_key,
-                                   aws_secret_access_key=aws_secret_key,
-                                   region_name='us-east-1')
-        self.s3 = boto3.resource('s3',
-                                 aws_access_key_id=aws_access_key,
-                                 aws_secret_access_key=aws_secret_key,
-                                 region_name='us-east-1')
+
+    def __init__(self, aws_access_key, aws_secret_key, region_name="us-east-1"):
+        self.client = None
+        self.s3 = None
+        self.aws_access_key = aws_access_key
+        self.aws_secret_key = aws_secret_key
+        self.region_name = region_name
+
+    def init(self):
+        self.client = boto3.client(
+            "s3",
+            aws_access_key_id=self.aws_access_key,
+            aws_secret_access_key=self.aws_secret_key,
+            region_name=self.region_name,
+        )
+        self.s3 = boto3.resource(
+            "s3",
+            aws_access_key_id=self.aws_access_key,
+            aws_secret_access_key=self.aws_secret_key,
+            region_name=self.region_name,
+        )
 
     def get_bucket(self, bucket_name):
         """Get an s3 bucket obj.
@@ -43,12 +55,12 @@ class S3Interaction:
             try:
                 self.s3.Bucket(bucket).download_file(key, local_filename)
             except botocore.exceptions.ClientError as e:
-                if e.response['Error']['Code'] == "404":
+                if e.response["Error"]["Code"] == "404":
                     print("The object does not exist.")
                 else:
                     raise
 
-    def get_s3_objects(self, bucket, prefix='', suffix=''):
+    def get_s3_objects(self, bucket, prefix="", suffix=""):
         """
         Generate objects in an S3 bucket.
 
@@ -60,12 +72,12 @@ class S3Interaction:
 
         :yield (boto3.resource.Bucket.objectsCollection) Next matching S3 object:
         """
-        kwargs = {'Bucket': bucket}
+        kwargs = {"Bucket": bucket}
 
         # If the prefix is a single string (not a tuple of strings), we can
         # do the filtering directly in the S3 API.
         if isinstance(prefix, str):
-            kwargs['Prefix'] = prefix
+            kwargs["Prefix"] = prefix
 
         while True:
 
@@ -74,12 +86,12 @@ class S3Interaction:
             resp = self.client.list_objects_v2(**kwargs)
 
             try:
-                contents = resp['Contents']
+                contents = resp["Contents"]
             except KeyError:
                 return
 
             for obj in contents:
-                key = obj['Key']
+                key = obj["Key"]
                 if key.startswith(prefix) and key.endswith(suffix):
                     yield obj
 
@@ -87,11 +99,11 @@ class S3Interaction:
             # Pass the continuation token into the next response, until we
             # reach the final page (when this field is missing).
             try:
-                kwargs['ContinuationToken'] = resp['NextContinuationToken']
+                kwargs["ContinuationToken"] = resp["NextContinuationToken"]
             except KeyError:
                 break
 
-    def get_s3_keys(self, bucket, prefix='', suffix=''):
+    def get_s3_keys(self, bucket, prefix="", suffix=""):
         """
         Generate the keys in an S3 bucket.
 
@@ -102,7 +114,7 @@ class S3Interaction:
         :yield (str) Next matching S3 key name:
         """
         for obj in self.get_s3_objects(bucket, prefix, suffix):
-            yield obj['Key']
+            yield obj["Key"]
 
     def put_file_to_s3_from_string(self, bucket, key, string_data):
         """Create key from python string.
@@ -122,10 +134,14 @@ class S3Interaction:
         :param acl: enable ACL
         """
         if acl:
-            self.s3.meta.client.upload_file(local_filename, bucket, key, ExtraArgs={'ACL': 'bucket-owner-full-control'})
+            self.s3.meta.client.upload_file(
+                local_filename,
+                bucket,
+                key,
+                ExtraArgs={"ACL": "bucket-owner-full-control"},
+            )
         else:
             self.s3.meta.client.upload_file(local_filename, bucket, key)
-
 
     def put_fileobj_to_s3(self, bucket, key, fileobj):
         """Create key from a byte-array.
@@ -158,7 +174,9 @@ class S3Interaction:
         else:
             return False
 
-    def move_key(self, src_bucket, src_key, dst_bucket, dst_key, move=False, overwrite=False):
+    def move_key(
+        self, src_bucket, src_key, dst_bucket, dst_key, move=False, overwrite=False
+    ):
         """ Move key from one bucket to another.
 
         :param src_bucket: (str)
@@ -178,10 +196,7 @@ class S3Interaction:
 
         else:  # lets copy!
 
-            copy_source = {
-                'Bucket': src_bucket,
-                'Key': src_key
-            }
+            copy_source = {"Bucket": src_bucket, "Key": src_key}
 
             dst_bucket_obj = self.get_bucket(dst_bucket)
 

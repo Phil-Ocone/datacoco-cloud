@@ -15,5 +15,5 @@ __all__ = [
     "S3Interaction",
     "SESInteraction",
     "SNSInteraction",
-    "SQSInteraction"
+    "SQSInteraction",
 ]

@@ -8,24 +8,38 @@ class SESInteraction:
     wrapper on boto3 ses
     """
 
-    def __init__(self, to, subject, sender, aws_access_key, aws_secret_key, aws_region='us-east-1'):
+    def __init__(
+        self,
+        to,
+        subject,
+        sender,
+        aws_access_key,
+        aws_secret_key,
+        aws_region="us-east-1",
+    ):
         """
         :param to:
         :param subject:
         :return:
         """
-
-        self.connection = boto3.client('ses',
-                                       aws_access_key_id=aws_access_key,
-                                       aws_secret_access_key=aws_secret_key,
-                                       region_name=aws_region)
-
+        self.aws_access_key = aws_access_key
+        self.aws_secret_key = aws_secret_key
+        self.aws_region = aws_region
+        self.connection = None
         self.to = to
         self.subject = subject
         self._html = None
         self._text = None
-        self._format = 'html'
+        self._format = "html"
         self.def_sender = sender
+
+    def init(self):
+        self.connection = boto3.client(
+            "ses",
+            aws_access_key_id=self.aws_access_key,
+            aws_secret_access_key=self.aws_secret_key,
+            region_name=self.aws_region,
+        )
 
     def html(self, html):
         """
@@ -56,45 +70,38 @@ class SESInteraction:
         if not from_addr:
             from_addr = self.def_sender
         if not self._html and not self._text:
-            raise Exception('You must provide a text or html body.')
+            raise Exception("You must provide a text or html body.")
         if not self._html:
-            self._format = 'text'
+            self._format = "text"
             body = self._text
 
         return self.connection.send_email(
             Source=from_addr,
-            Destination={
-                'ToAddresses': self.to
-            },
+            Destination={"ToAddresses": self.to},
             Message={
-                'Subject': {
-                    'Data': self.subject
-                },
-                'Body': {
-                    'Text': {
-                        'Data': body
-                    },
-                    'Html': {
-                        'Data': body
-                    }
-                }
-            }
+                "Subject": {"Data": self.subject},
+                "Body": {"Text": {"Data": body}, "Html": {"Data": body}},
+            },
         )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     """
     sending email sample run
     """
     conf = Config()
-    aws_access_key = conf['aws']['aws_access_key']
-    aws_secret_key = conf['aws']['aws_secret_key']
-    aws_region = conf['aws']['aws_region']
-    email = SESInteraction(conf['ses']['ses_def_recipient'],
-                           'Sample Email', conf['ses']['ses_def_sender'],
-                           aws_access_key, aws_secret_key, aws_region
-                           )
+    aws_access_key = conf["aws"]["aws_access_key"]
+    aws_secret_key = conf["aws"]["aws_secret_key"]
+    aws_region = conf["aws"]["aws_region"]
+    email = SESInteraction(
+        conf["ses"]["ses_def_recipient"],
+        "Sample Email",
+        conf["ses"]["ses_def_sender"],
+        aws_access_key,
+        aws_secret_key,
+        aws_region,
+    )
     email.html("<b>Sample Message</b>")
-    email.text('Sample Message')
+    email.text("Sample Message")
     email.send()
-    print('Email sent!')
+    print("Email sent!")

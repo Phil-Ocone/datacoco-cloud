@@ -24,26 +24,29 @@ pipeline{
 
                 echo "coverage"
            
-                // sh "pip install -r requirements.txt"
-                // sh "pip install coverage codacy-coverage"
-                // sh "coverage run --omit='tests/test_batch.py' -m unittest tests/test_config.py tests/test_logger.py"
-                // sh "coverage xml -i"
-                // sh "python-codacy-coverage -r coverage.xml"
+                sh "pip install -r requirements-dev.txt"
+                sh "black --check datacoco_cloud tests"
+                sh "pip install coverage codacy-coverage"
+                sh "coverage run -m unittest tests.unit"
+                sh "coverage xml -i"
+                sh "python-codacy-coverage -r coverage.xml"
             }
             post {
                 always {
                     echo "plugin"
-                    // step([$class: 'CoberturaPublisher',
-                    //                autoUpdateHealth: false,
-                    //                autoUpdateStability: false,
-                    //                coberturaReportFile: 'coverage.xml',
-                    //                failNoReports: false,
-                    //                failUnhealthy: false,
-                    //                failUnstable: false,
-                    //                maxNumberOfBuilds: 10,
-                    //                onlyStable: false,
-                    //                sourceEncoding: 'ASCII',
-                    //                zoomCoverageChart: false])
+                    always {
+                        step([$class: 'CoberturaPublisher',
+                                       autoUpdateHealth: false,
+                                       autoUpdateStability: false,
+                                       coberturaReportFile: 'coverage.xml',
+                                       failNoReports: false,
+                                       failUnhealthy: false,
+                                       failUnstable: false,
+                                       maxNumberOfBuilds: 10,
+                                       onlyStable: false,
+                                       sourceEncoding: 'ASCII',
+                                       zoomCoverageChart: false])
+                    }
                 }
             }       
         }
