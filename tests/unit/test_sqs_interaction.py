@@ -9,7 +9,9 @@ from datacoco_cloud import SQSInteraction
 
 class TestSQSInteraction(unittest.TestCase):
     def setUp(self):
-        self.testCls = SQSInteraction(aws_access_key="", aws_secret_key="", queue_name="") # nosec
+        self.testCls = SQSInteraction(
+            aws_access_key="", aws_secret_key="", queue_name=""
+        )  # nosec
 
     def test_init_sqs(self):
         self.testCls.sqs = MagicMock()
@@ -42,7 +44,7 @@ class TestSQSInteraction(unittest.TestCase):
         self.assertTrue(True)  # Assert that this line is reached without error
 
     def test_create_subscriber(self):
-        self. testCls.sqs = MagicMock()
+        self.testCls.sqs = MagicMock()
         self.testCls.create_subscriber()
         self.assertTrue(True)  # Assert that this line is reached without error
 

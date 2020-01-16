@@ -82,12 +82,7 @@ class AthenaInteraction:
         raise Exception("Query not found")
 
     def repair_table(
-        self,
-        db_name,
-        table,
-        output_location=None,
-        partitions=None,
-        s3_data=None
+        self, db_name, table, output_location=None, partitions=None, s3_data=None
     ):
         """
         Will try and load all partitions if none are specified
@@ -97,15 +92,12 @@ class AthenaInteraction:
             if partitions is None:
                 sql = "MSCK REPAIR TABLE {}".format(table)
             else:
-                if type(partitions) is not dict and \
-                        type(partitions) is not list:
+                if type(partitions) is not dict and type(partitions) is not list:
                     raise Exception("Partitions must be passed as a dict or list")
                 if type(partitions) is list:
                     part_str = ""
                     for d in partitions:
-                        each_partition = ",".join(
-                            [i + "='" + d[i] + "'" for i in d]
-                        )
+                        each_partition = ",".join([i + "='" + d[i] + "'" for i in d])
                         part_str += " partition ({})".format(each_partition)
                     sql = """ALTER TABLE {} add{}""".format(table, part_str)
                 elif type(partitions) is dict:
@@ -166,10 +158,12 @@ class AthenaInteraction:
                     execution_details["QueryExecution"]["Status"]["StateChangeReason"]
                 )
             if max_poll_time == 0:
-                return "Query took too long. Query S3 at {}" \
-                       " to fetch the results or \
+                return (
+                    "Query took too long. Query S3 at {}"
+                    " to fetch the results or \
                     query with the following QueryExecutionId {}".format(
-                    output_location, query_execution_id
+                        output_location, query_execution_id
+                    )
                 )
 
             sleep(poll_interval)

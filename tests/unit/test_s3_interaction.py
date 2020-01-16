@@ -40,13 +40,17 @@ class TestS3Interaction(unittest.TestCase):
     def test_put_file_to_s3_from_string(self):
         self.testCls.client = MagicMock()
         self.testCls.s3 = MagicMock()
-        self.testCls.put_file_to_s3_from_string(bucket="", key="", string_data="test_data")
+        self.testCls.put_file_to_s3_from_string(
+            bucket="", key="", string_data="test_data"
+        )
         self.assertTrue(True)  # Assert that this line is reached without error
 
     def test_put_file_to_s3(self):
         self.testCls.client = MagicMock()
         self.testCls.s3 = MagicMock()
-        self.testCls.put_file_to_s3(bucket="bucket", key="key", local_filename="/tmp/test")
+        self.testCls.put_file_to_s3(
+            bucket="bucket", key="key", local_filename="/tmp/test"
+        )
         self.assertTrue(True)  # Assert that this line is reached without error
 
     def test_put_file_to_s3(self):
@@ -63,7 +67,7 @@ class TestS3Interaction(unittest.TestCase):
 
     def test_key_exists(self):
         self.testCls.client = MagicMock()
-        self. testCls.s3 = MagicMock()
+        self.testCls.s3 = MagicMock()
         self.testCls.key_exists(bucket="", key="")
         self.assertTrue(True)  # Assert that this line is reached without error
 

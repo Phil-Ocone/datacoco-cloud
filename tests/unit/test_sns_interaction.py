@@ -9,7 +9,9 @@ from datacoco_cloud import SNSInteraction
 
 class TestSNSInteraction(unittest.TestCase):
     def setUp(self):
-        self.testCls = SNSInteraction(aws_access_key="", aws_secret_key="", topic="")  # nosec
+        self.testCls = SNSInteraction(
+            aws_access_key="", aws_secret_key="", topic=""
+        )  # nosec
 
     def test_create_topic(self):
         self.testCls.client = MagicMock()
@@ -18,13 +20,17 @@ class TestSNSInteraction(unittest.TestCase):
 
     def test_create_publisher(self):
         self.testCls.client = MagicMock()
-        self.testCls.client.list_topics.return_value = {"Topics": [{"TopicArn": "test"}]}
+        self.testCls.client.list_topics.return_value = {
+            "Topics": [{"TopicArn": "test"}]
+        }
         self.testCls.create_publisher()
         self.assertTrue(True)  # Assert that this line is reached without error
 
     def test_create_subscriber(self):
         self.testCls.client = MagicMock()
-        self.testCls.client.list_topics.return_value = {"Topics": [{"TopicArn": "test"}]}
+        self.testCls.client.list_topics.return_value = {
+            "Topics": [{"TopicArn": "test"}]
+        }
         self.testCls.create_subscriber(sqs_interaction=MagicMock())
         self.assertTrue(True)  # Assert that this line is reached without error
 

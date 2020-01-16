@@ -6,12 +6,13 @@ from datacoco_cloud import AthenaInteraction
 """
 Test for Athena
 """
+
+
 class TestAthenaInteraction(unittest.TestCase):
     def setUp(self):
         self.testCls = AthenaInteraction(
-            aws_access_key="",
-            aws_secret_key="",
-            region="")
+            aws_access_key="", aws_secret_key="", region=""
+        )
 
     def test_store_query(self):
         self.testCls.client = MagicMock()

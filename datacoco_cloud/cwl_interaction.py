@@ -51,9 +51,7 @@ class CWLInteraction:
         """Get log events for given log stream"""
 
         resp = self.client.get_log_events(
-            logGroupName=log_group,
-            logStreamName=log_stream,
-            startFromHead=True
+            logGroupName=log_group, logStreamName=log_stream, startFromHead=True
         )
 
         response_code = resp["ResponseMetadata"]["HTTPStatusCode"]
@@ -101,8 +99,7 @@ class CWLInteraction:
 
                 else:
                     raise ValueError(
-                        "Request failed with response code: {}"
-                            .format(response_code)
+                        "Request failed with response code: {}".format(response_code)
                     )
 
             return True  # had logs
