@@ -86,9 +86,7 @@ class SESInteraction:
 
 
 if __name__ == "__main__":
-    """
-    sending email sample run
-    """
+    # Sending email sample run
     conf = Config()
     aws_access_key = conf["aws"]["aws_access_key"]
     aws_secret_key = conf["aws"]["aws_secret_key"]

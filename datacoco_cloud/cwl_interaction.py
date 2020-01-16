@@ -1,8 +1,11 @@
+"""
+Cloud Watch Interaction tool
+"""
+import boto3
 import gevent.monkey
 
 gevent.monkey.patch_all()
 
-import boto3
 from datetime import datetime
 
 DATE_FMT = "%Y-%m-%d %H:%M:%S"
@@ -44,13 +47,13 @@ class CWLInteraction:
             )
             print(message_dt + ": " + message)
 
-    def get_log_events(
-        self, log_group, log_stream, start_time=None, end_time=None, limit=None
-    ):
+    def get_log_events(self, log_group, log_stream):
         """Get log events for given log stream"""
 
         resp = self.client.get_log_events(
-            logGroupName=log_group, logStreamName=log_stream, startFromHead=True
+            logGroupName=log_group,
+            logStreamName=log_stream,
+            startFromHead=True
         )
 
         response_code = resp["ResponseMetadata"]["HTTPStatusCode"]
@@ -88,7 +91,8 @@ class CWLInteraction:
                         break  # no more logs
                     else:
                         forward_token = (
-                            next_forward_token  # reset for potential multiple loops
+                            # reset for potential multiple loops
+                            next_forward_token
                         )
 
                     events = resp["events"]
@@ -97,7 +101,8 @@ class CWLInteraction:
 
                 else:
                     raise ValueError(
-                        "Request failed with response code: {}".format(response_code)
+                        "Request failed with response code: {}"
+                            .format(response_code)
                     )
 
             return True  # had logs

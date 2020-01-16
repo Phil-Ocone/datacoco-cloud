@@ -22,7 +22,6 @@ class EMRCluster(object):
         aws_access_key,
         aws_secret_access_key,
         region_name="us-east-1",
-        config_settings="general",
         SLEEP_TIME=30,
     ):
         self.aws_secret_access_key = aws_secret_access_key
@@ -132,9 +131,8 @@ class EMRCluster(object):
             pass
         else:
             while status in ("STARTING", "BOOTSTRAPPING"):
-                status = self.conn.describe_cluster(ClusterId=cluster_id)["Cluster"][
-                    "Status"
-                ]["State"]
+                c = self.conn.describe_cluster(ClusterId=cluster_id)
+                status = c["Cluster"]["Status"]["State"]
                 print(status)
                 sleep(self.SLEEP_TIME)
 
@@ -206,7 +204,9 @@ class EMRCluster(object):
         :param script_path: this will be either local on master node or s3://path
         :param num_executors: default 2
         :param executor_memory: default 2G
-        :param async_mode: default True, True will return right away, False polls until completion
+        :param async_mode: default True,
+            True will return right away,
+            False polls until completion
         :param args: a list object containing arbitrary arguments to spark script
         :return:
         """
@@ -295,7 +295,8 @@ class EMRCluster(object):
         args=[],
     ):
         """
-        a super simple method for creating a cluster, running a job and killing it
+        a super simple method for creating a cluster,
+        running a job and killing it
         runs syncronously of course
         :param script_path:
         :param args:

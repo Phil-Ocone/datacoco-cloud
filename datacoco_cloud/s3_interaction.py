@@ -17,6 +17,10 @@ class S3Interaction:
         self.region_name = region_name
 
     def init(self):
+        """
+        Create instance for s3 clients
+        :return:
+        """
         self.client = boto3.client(
             "s3",
             aws_access_key_id=self.aws_access_key,

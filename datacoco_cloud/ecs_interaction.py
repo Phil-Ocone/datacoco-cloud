@@ -13,7 +13,10 @@ class ECSInteraction:
     wrapper on boto3 ecs
     """
 
-    def __init__(self, aws_access_key, aws_secret_key, region_name="us-east-1"):
+    def __init__(self,
+                 aws_access_key,
+                 aws_secret_key,
+                 region_name="us-east-1"):
         self.conn = None
         self.aws_access_key = (aws_access_key,)
         self.aws_secret_key = (aws_secret_key,)
@@ -31,7 +34,9 @@ class ECSInteraction:
         """Wait for task to finish"""
         waiter = self.conn.get_waiter("tasks_stopped")
         waiter.wait(
-            cluster=cluster, tasks=tasks, WaiterConfig={"Delay": 10, "MaxAttempts": 720}
+            cluster=cluster,
+            tasks=tasks,
+            WaiterConfig={"Delay": 10, "MaxAttempts": 720}
         )
 
     def get_task_definition(self, task):
@@ -39,9 +44,22 @@ class ECSInteraction:
         return resp
 
     def actual_describe_task(self, cluster, tasks):
+        """
+        Show more details about the tasks
+        :param cluster:
+        :param tasks:
+        :return:
+        """
         return self.conn.describe_tasks(cluster=cluster, tasks=tasks)
 
     def stop_task(self, cluster, task, reason):
+        """
+        Stop the task
+        :param cluster:
+        :param task:
+        :param reason:
+        :return:
+        """
         return self.conn.stop_task(cluster=cluster, task=task, reason=reason)
 
     def get_task_status(self, cluster=None, tasks=None):
@@ -60,7 +78,9 @@ class ECSInteraction:
         if not all([status == "STOPPED" for status in statuses]):
             raise Exception("Not all tasks finished! :(")
 
-        exit_codes = [c["exitCode"] for t in response["tasks"] for c in t["containers"]]
+        exit_codes = [c["exitCode"] for t
+                      in response["tasks"]
+                      for c in t["containers"]]
 
         if all([exit_code == 0 for exit_code in exit_codes]):  # all goes well
             return True
@@ -93,7 +113,14 @@ class ECSInteraction:
         return logs_stream_prefix, logs_group
 
     def list_tasks(self, cluster, desiredStatus):
-        response = self.conn.list_tasks(cluster=cluster, desiredStatus=desiredStatus,)
+        """
+        List the tasks
+        :param cluster:
+        :param desiredStatus:
+        :return:
+        """
+        response = self.conn.list_tasks(cluster=cluster,
+                                        desiredStatus=desiredStatus)
         return response
 
     def run_task(
@@ -111,7 +138,10 @@ class ECSInteraction:
         security_groups=None,
         assign_public_ip=None,
     ):
-        """Run an ECS task on a given cluster with optional command overrides"""
+        """
+        Run an ECS task on a given
+        cluster with optional command overrides
+        """
 
         defaults = self.get_task_definition(task_definition)
 
@@ -138,7 +168,8 @@ class ECSInteraction:
             container_overrides["environment"] = environment
         else:
             if "environment" in container_defaults:
-                container_overrides["environment"] = container_defaults["environment"]
+                default = container_defaults["environment"]
+                container_overrides["environment"] = default
 
         if cpu:
             print("Using custom cpu units: {}".format(cpu))
@@ -157,7 +188,8 @@ class ECSInteraction:
                 container_overrides["memory"] = 128
 
         if memory_reservation:
-            print("Using custom soft memory limit: {}".format(memory_reservation))
+            print("Using custom soft memory limit: {}"
+                  .format(memory_reservation))
             container_overrides["memoryReservation"] = memory_reservation
         else:
             if "memoryReservation" in container_defaults:
@@ -183,7 +215,8 @@ class ECSInteraction:
                 }
             }
 
-            print(f"Launch type is FARGATE so using network config: {network_config}")
+            print(f"Launch type is FARGATE so "
+                  f"using network config: {network_config}")
 
             response = self.conn.run_task(
                 cluster=cluster,
@@ -222,7 +255,8 @@ class ECSInteraction:
 
         self.wait_task(cluster, taskArns)
 
-        success = self.get_task_status(cluster, taskArns)  # returns when stopped
+        # returns when stopped
+        success = self.get_task_status(cluster, taskArns)
 
         if success:
             print("There be {} successful task(s) with logs :)".format(len(taskArns)))

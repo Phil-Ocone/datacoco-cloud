@@ -3,20 +3,20 @@ from unittest.mock import MagicMock
 
 from datacoco_cloud import AthenaInteraction
 
-
+"""
+Test for Athena
+"""
 class TestAthenaInteraction(unittest.TestCase):
     def setUp(self):
-        self.testCls = AthenaInteraction(aws_access_key="", aws_secret_key="", region="")
+        self.testCls = AthenaInteraction(
+            aws_access_key="",
+            aws_secret_key="",
+            region="")
 
-    def test_exec_sql(self):
+    def test_store_query(self):
         self.testCls.client = MagicMock()
         self.testCls.store_query(name="", description="", db="", sql="")
         self.testCls.client.create_named_query.return_value = {}
-        self.assertTrue(True)  # Assert that this line is reached without error
-
-    def test_search_queries_by_db_name(self):
-        self.testCls.client = MagicMock()
-        self.testCls.search_queries_by_db_name(db_name="")
         self.assertTrue(True)  # Assert that this line is reached without error
 
     def test_search_queries_by_db_name(self):

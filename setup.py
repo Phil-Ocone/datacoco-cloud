@@ -4,6 +4,10 @@ from setuptools import setup, find_packages
 
 
 def get_version():
+    """
+    Get version from file
+    :return:
+    """
     version_file = open(os.path.join("datacoco_cloud", "__version__.py"))
     version_contents = version_file.read()
     return re.search('__version__ = "(.*?)"', version_contents).group(1)
