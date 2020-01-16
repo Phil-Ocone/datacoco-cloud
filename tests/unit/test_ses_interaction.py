@@ -5,32 +5,25 @@ from datacoco_cloud import SESInteraction
 
 
 class TestSESInteraction(unittest.TestCase):
-    def test_html(self):
-        testCls = SESInteraction(
+    def setUp(self):
+        self.testCls = SESInteraction(
             to="", subject="", sender="", aws_secret_key="", aws_access_key=""
-        )
+        )  # nosec
 
-        testCls.connection = MagicMock()
-        testCls.html(html="")
+    def test_html(self):
+        self.testCls.connection = MagicMock()
+        self.testCls.html(html="")
         self.assertTrue(True)  # Assert that this line is reached without error
 
     def test_text(self):
-        testCls = SESInteraction(
-            to="", subject="", sender="", aws_secret_key="", aws_access_key=""
-        )
-
-        testCls.connection = MagicMock()
-        testCls.text(text="")
+        self.testCls.connection = MagicMock()
+        self.testCls.text(text="")
         self.assertTrue(True)  # Assert that this line is reached without error
 
     def test_send(self):
-        testCls = SESInteraction(
-            to="", subject="", sender="", aws_secret_key="", aws_access_key=""
-        )
-
-        testCls.connection = MagicMock()
-        testCls.text(text="test")
-        testCls.send()
+        self.testCls.connection = MagicMock()
+        self.testCls.text(text="test")
+        self.testCls.send()
         self.assertTrue(True)  # Assert that this line is reached without error
 
 

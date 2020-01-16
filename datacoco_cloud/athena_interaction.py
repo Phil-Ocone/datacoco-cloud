@@ -233,7 +233,7 @@ class AthenaInteraction:
 
     def format_results(self, results, delimiter):
         data_table = ""
-        for index, row in enumerate(results["ResultSet"]["Rows"]):
+        for row in results["ResultSet"]["Rows"]:
             temp_row = []
             for values in row["Data"]:
                 if "VarCharValue" in values:

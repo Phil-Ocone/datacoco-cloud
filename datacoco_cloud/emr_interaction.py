@@ -187,6 +187,7 @@ class EMRCluster(object):
         else:
             while status in ("PENDING", "RUNNING"):
                 status, step_response = self.get_step_status(cluster_id, step_id)
+                print(step_response)
                 print(status)
                 sleep(60)
         return step_id, status, response

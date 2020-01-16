@@ -2,11 +2,10 @@
 """
 this module provides basic interaction with aws ecs service
 """
+import boto3
 import gevent.monkey
 
 gevent.monkey.patch_all()
-
-import boto3
 
 
 class ECSInteraction:
