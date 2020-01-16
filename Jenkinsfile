@@ -24,7 +24,7 @@ pipeline{
 
                 echo "coverage"
            
-                sh "pip install -r requirements-dev.txt"
+                sh "pip install -r requirements_dev.txt"
                 sh "black --check datacoco_cloud tests"
                 sh "pip install coverage codacy-coverage"
                 sh "coverage run -m unittest tests.unit"
@@ -62,7 +62,7 @@ pipeline{
                     sh "pip install twine"
                     sh "rm -rf dist"
                     sh "python setup.py sdist"
-                    sh "twine upload --repository-url https://test.pypi.org/legacy/ --skip-existing dist/* -u ${USERNAME} -p ${PASSWORD}"
+//                     sh "twine upload --repository-url https://test.pypi.org/legacy/ --skip-existing dist/* -u ${USERNAME} -p ${PASSWORD}"
                 }
             }
         }
