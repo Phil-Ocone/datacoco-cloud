@@ -23,36 +23,37 @@ pipeline{
                 slackSend (color: 'good', message: "datacoco.cloud_pypi_pipeline_${GIT_BRANCH} - Starting build #${BUILD_NUMBER}. (<${env.BUILD_URL}|Open>)")
 
                 echo "coverage"
-           
+
                 sh "pip install -r requirements_dev.txt"
                 sh "black --check datacoco_cloud tests"
-//                 sh "pip install coverage codacy-coverage"
-//                 sh "coverage run -m unittest tests.unit"
-//                 sh "coverage xml -i"
-//                 sh "python-codacy-coverage -r coverage.xml"
+                sh "pip install coverage codacy-coverage"
+                sh "coverage run -m unittest tests"
+                sh "coverage xml -i"
+                sh "python-codacy-coverage -r coverage.xml"
             }
             post {
                 always {
-                    echo "plugin"
-//                     always {
-//                         step([$class: 'CoberturaPublisher',
-//                                        autoUpdateHealth: false,
-//                                        autoUpdateStability: false,
-//                                        coberturaReportFile: 'coverage.xml',
-//                                        failNoReports: false,
-//                                        failUnhealthy: false,
-//                                        failUnstable: false,
-//                                        maxNumberOfBuilds: 10,
-//                                        onlyStable: false,
-//                                        sourceEncoding: 'ASCII',
-//                                        zoomCoverageChart: false])
-//                     }
+                    step([$class: 'CoberturaPublisher',
+                                   autoUpdateHealth: false,
+                                   autoUpdateStability: false,
+                                   coberturaReportFile: 'coverage.xml',
+                                   failNoReports: false,
+                                   failUnhealthy: false,
+                                   failUnstable: false,
+                                   maxNumberOfBuilds: 10,
+                                   onlyStable: false,
+                                   sourceEncoding: 'ASCII',
+                                   zoomCoverageChart: false])
                 }
-            }       
+            }
         }
-        stage('Deploy to Pypi') {   
+        stage('Deploy to Test Pypi Env') {
+            when {
+                anyOf {
+                    branch 'qa';
+                }
+            }
             steps {
-
                 withCredentials([[
                     $class: 'UsernamePasswordMultiBinding',
                     credentialsId: 'e9f73e25-ab88-4382-9018-dd0841cc327c',
@@ -62,8 +63,25 @@ pipeline{
                     sh "pip install twine"
                     sh "rm -rf dist"
                     sh "python setup.py sdist"
-                    // sh "twine upload --repository-url https://test.pypi.org/legacy/ --skip-existing dist/* -u ${USERNAME} -p ${PASSWORD}"
-                    // sh "twine upload --skip-existing dist/* -u ${USERNAME} -p ${PASSWORD}"
+                    sh "twine upload --repository-url https://test.pypi.org/legacy/ --skip-existing dist/* -u ${USERNAME} -p ${PASSWORD}"
+                }
+            }
+        }
+        stage('Deploy to Pypi') {
+            when {
+                branch 'master'
+            }
+            steps {
+                withCredentials([[
+                    $class: 'UsernamePasswordMultiBinding',
+                    credentialsId: 'e9f73e25-ab88-4382-9018-dd0841cc327c',
+                    usernameVariable: 'USERNAME',
+                    passwordVariable: 'PASSWORD'
+                ]]) {
+                    sh "pip install twine"
+                    sh "rm -rf dist"
+                    sh "python setup.py sdist"
+                    sh "twine upload --skip-existing dist/* -u ${USERNAME} -p ${PASSWORD}"
                 }
             }
         }
