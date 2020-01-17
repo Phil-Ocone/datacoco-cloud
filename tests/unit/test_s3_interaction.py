@@ -49,11 +49,11 @@ class TestS3Interaction(unittest.TestCase):
         self.testCls.client = MagicMock()
         self.testCls.s3 = MagicMock()
         self.testCls.put_file_to_s3(
-            bucket="bucket", key="key", local_filename="/tmp/test"
+            bucket="bucket", key="key", local_filename="/tmp/test"  # nosec
         )
         self.assertTrue(True)  # Assert that this line is reached without error
 
-    def test_put_file_to_s3(self):
+    def test_put_fileobj_to_s3(self):
         self.testCls.client = MagicMock()
         self.testCls.s3 = MagicMock()
         self.testCls.put_fileobj_to_s3(bucket="", key="", fileobj={})

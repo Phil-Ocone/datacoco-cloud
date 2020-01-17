@@ -161,7 +161,7 @@ class EMRCluster(object):
         )
         return clusters
 
-    def step_script_submit(self, cluster_id, script_path, async_mode=True, args=[]):
+    def step_script_submit(self, cluster_id, script_path, async_mode=True, args=[]):  # nosec
         args_str = " ".join(args)
 
         response = self.conn.add_job_flow_steps(
@@ -190,7 +190,7 @@ class EMRCluster(object):
                 sleep(60)
         return step_id, status, response
 
-    def step_spark_submit(
+    def step_spark_submit(  # nosec
         self,
         cluster_id,
         script_path="/home/hadoop/run.py",
@@ -283,7 +283,7 @@ class EMRCluster(object):
         for cluster in cluster_list:
             self.kill_cluster(cluster["Id"])
 
-    def create_run_kill(
+    def create_run_kill(  # nosec
         self,
         script_path,
         cluster_name=None,

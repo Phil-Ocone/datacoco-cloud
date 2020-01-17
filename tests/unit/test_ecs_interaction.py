@@ -16,11 +16,6 @@ class TestECSInteraction(unittest.TestCase):
         self.testCls.wait_task(cluster="", tasks="")
         self.assertTrue(True)  # Assert that this line is reached without error
 
-    def test_wait_task(self):
-        self.testCls.conn = MagicMock()
-        self.testCls.wait_task(cluster="", tasks="")
-        self.assertTrue(True)  # Assert that this line is reached without error
-
     def test_get_task_definition(self):
         self.testCls.conn = MagicMock()
         self.testCls.get_task_definition(task="")

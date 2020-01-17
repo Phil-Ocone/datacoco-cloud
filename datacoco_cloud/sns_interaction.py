@@ -21,7 +21,7 @@ class SNSInteraction:
     def create_topic(self):
         response = self.client.create_topic(Name=self.topic)
         topic_arn = response["TopicArn"]
-        print(f"Created topic ARN: {topic_arn}")
+        print(f"Created topic ARN: {topic_arn}")  # nosec
         return topic_arn
 
     def create_publisher(self):

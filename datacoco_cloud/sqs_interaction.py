@@ -50,7 +50,7 @@ class SQSInteraction:
                 self.queue_name,
             )
 
-        print(f"Queue exists: {self.sqs_queue_url is not None}")
+        print(f"Queue exists: {self.sqs_queue_url is not None}")  # nosec
 
         if not self.sqs_queue_url:
             raise ValueError("SQS returned a result without a QueueUrl in it")

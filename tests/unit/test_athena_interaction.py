@@ -3,10 +3,6 @@ from unittest.mock import MagicMock
 
 from datacoco_cloud import AthenaInteraction
 
-"""
-Test for Athena
-"""
-
 
 class TestAthenaInteraction(unittest.TestCase):
     def setUp(self):

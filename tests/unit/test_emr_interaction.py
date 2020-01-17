@@ -14,7 +14,6 @@ class TestEMRInteraction(unittest.TestCase):
             temp_bucket="",
             region_name="",
             aws_secret_access_key="",
-            config_settings="",
             env="",
             SLEEP_TIME=1,
         )
