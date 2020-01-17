@@ -18,7 +18,6 @@ _Example:_
 1.  Checkout this branch
 
 2.  Switch to virtual environment
-
 3.  Run `python -m datacoco_cloud.ses_interaction`
 
 - [ ]   Verify that the aws service works
