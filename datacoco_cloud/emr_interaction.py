@@ -161,7 +161,9 @@ class EMRCluster(object):
         )
         return clusters
 
-    def step_script_submit(self, cluster_id, script_path, async_mode=True, args=[]):  # nosec
+    def step_script_submit(
+        self, cluster_id, script_path, async_mode=True, args=[]
+    ):  # nosec
         args_str = " ".join(args)
 
         response = self.conn.add_job_flow_steps(
