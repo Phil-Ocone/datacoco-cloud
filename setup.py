@@ -18,7 +18,7 @@ setup(
     packages=find_packages(exclude=["tests*"]),
     version=get_version(),
     license="MIT",
-    description="common code for AWS Cloud Services",
+    description="Data common code for AWS Cloud Services by Equinox",
     long_description=open("README.rst").read(),
     author="Equinox Fitness",
     url="https://github.com/equinoxfitness/datacoco-cloud",
