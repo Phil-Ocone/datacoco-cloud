@@ -19,13 +19,21 @@ setup(
     version=get_version(),
     license="MIT",
     description="Data common code for AWS Cloud Services by Equinox",
-    long_description=open("README.rst").read(),
+    long_description=open("README.md").read(),
+    long_description_content_type='text/markdown',
     author="Equinox Fitness",
     url="https://github.com/equinoxfitness/datacoco-cloud",
     install_requires=[
       'requests==2.20.0',
       'gevent==1.3.7',
       'boto3==1.9.203'
+    ],
+    classifiers=[
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Developers",
+        "Natural Language :: English",
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3.6",
     ],
 )
 
