@@ -1,47 +1,48 @@
-datacoco.cloud
-=======================
+datacoco-cloud
+=================
 
 .. image:: https://badge.fury.io/py/datacoco-cloud.svg
     :target: https://badge.fury.io/py/datacoco-cloud
     :alt: PyPI Version
 
+.. image:: https://api.codacy.com/project/badge/Grade/8b768d9639a94456b8574158122f36ae
+    :target: https://www.codacy.com/manual/equinoxfitness/datacoco-cloud?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=equinoxfitness/datacoco-cloud&amp;utm_campaign=Badge_Grade
+    :alt: Code Quality Grade
+
+.. image:: https://api.codacy.com/project/badge/Coverage/36df276fb1fe47d18ff1ea8c7a0aa522
+    :target: https://www.codacy.com/manual/equinoxfitness/datacoco-cloud?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=equinoxfitness/datacoco-cloud&amp;utm_campaign=Badge_Coverage
+    :alt: Coverage
+
 .. image:: https://readthedocs.org/projects/datacoco-cloud/badge/?version=latest
     :target: https://datacoco-cloud.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-.. image:: https://api.codacy.com/project/badge/Grade/8b768d9639a94456b8574158122f36ae
-    :target: https://www.codacy.com/manual/equinoxfitness/datacoco.cloud?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=equinoxfitness/datacoco.cloud&amp;utm_campaign=Badge_Grade
-    :alt: Code Quality Grade
-
 .. image:: https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg
-    :target: https://github.com/equinoxfitness/datacoco.cloud/blob/master/CODE_OF_CONDUCT.rst
+    :target: https://github.com/equinoxfitness/datacoco-cloud/blob/master/CODE_OF_CONDUCT.rst
     :alt: Code of Conduct
 
-Installing the latest version
+Datacoco-cloud contains interaction classes S3, Athena, SES, SNS, SQS, ECS, EMR, Cloudwatch logs
+
+Installation
 ------------
 
-To install the latest version, use pip:
+datacoco-cloud requires Python 3.6+
 
 ::
 
-     pip install datacoco-cloud
+    python3 -m venv <virtual env name>
+    source <virtual env name>/bin/activate
+    pip install datacoco-cloud
 
+Quickstart
+----------
 
-Modules
-------------
+::
 
-
-Cocloud contains interaction classes for the following aws servies
-
-
-- S3
-- Athena
-- SES
-- SNS
-- SQS
-- ECS
-- EMR
-- CloudWatch Logs
+    python3 -m venv <virtual env name>
+    source <virtual env name>/bin/activate
+    pip install --upgrade pip
+    pip install -r requirements_dev.txt
 
 
 Development
@@ -74,4 +75,4 @@ Contributions to datacoco\_cloud are welcome!
 
 Please reference guidelines to help with setting up your development
 environment
-`here <https://github.com/equinoxfitness/datacoco.cloud/blob/master/CONTRIBUTING.rst>`__.
+`here <https://github.com/equinoxfitness/datacoco-cloud/blob/master/CONTRIBUTING.rst>`__.
