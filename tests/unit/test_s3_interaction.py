@@ -76,7 +76,3 @@ class TestS3Interaction(unittest.TestCase):
         self.testCls.s3 = MagicMock()
         self.testCls.move_key(src_bucket="", src_key="", dst_bucket="", dst_key="")
         self.assertTrue(True)  # Assert that this line is reached without error
-
-
-if __name__ == "__main__":
-    unittest.main()

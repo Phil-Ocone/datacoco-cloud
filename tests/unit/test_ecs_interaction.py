@@ -79,7 +79,3 @@ class TestECSInteraction(unittest.TestCase):
         }
         self.testCls.run_task(cluster="", task_definition="")
         self.assertTrue(True)  # Assert that this line is reached without error
-
-
-if __name__ == "__main__":
-    unittest.main()

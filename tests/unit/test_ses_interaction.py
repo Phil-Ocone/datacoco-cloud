@@ -28,7 +28,3 @@ class TestSESInteraction(unittest.TestCase):
         self.testCls.text(text="test")
         self.testCls.send()
         self.assertTrue(True)  # Assert that this line is reached without error
-
-
-if __name__ == "__main__":
-    unittest.main()

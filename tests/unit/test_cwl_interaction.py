@@ -25,7 +25,3 @@ class TestCWLInteraction(unittest.TestCase):
         }
         self.testCls.get_log_events(log_group="", log_stream="")
         self.assertTrue(True)  # Assert that this line is reached without error
-
-
-if __name__ == "__main__":
-    unittest.main()

@@ -57,7 +57,3 @@ class TestEMRInteraction(unittest.TestCase):
         self.testCls.conn = MagicMock()
         self.testCls.create_run_kill(script_path="")
         self.assertTrue(True)  # Assert that this line is reached without error
-
-
-if __name__ == "__main__":
-    unittest.main()
