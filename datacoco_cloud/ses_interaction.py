@@ -1,5 +1,4 @@
 import boto3
-from cocore.config import Config
 from past.builtins import basestring
 
 
@@ -83,23 +82,3 @@ class SESInteraction:
                 "Body": {"Text": {"Data": body}, "Html": {"Data": body}},
             },
         )
-
-
-if __name__ == "__main__":
-    # Sending email sample run
-    conf = Config()
-    aws_access_key = conf["aws"]["aws_access_key"]
-    aws_secret_key = conf["aws"]["aws_secret_key"]
-    aws_region = conf["aws"]["aws_region"]
-    email = SESInteraction(
-        conf["ses"]["ses_def_recipient"],
-        "Sample Email",
-        conf["ses"]["ses_def_sender"],
-        aws_access_key,
-        aws_secret_key,
-        aws_region,
-    )
-    email.html("<b>Sample Message</b>")
-    email.text("Sample Message")
-    email.send()
-    print("Email sent!")
