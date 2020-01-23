@@ -9,7 +9,9 @@ class S3Interaction:
     Class to simplify interacting with S3 using boto3
     """
 
-    def __init__(self, aws_access_key, aws_secret_key, region_name="us-east-1"):
+    def __init__(
+        self, aws_access_key, aws_secret_key, region_name="us-east-1"
+    ):
         self.client = None
         self.s3 = None
         self.aws_access_key = aws_access_key
@@ -179,7 +181,13 @@ class S3Interaction:
             return False
 
     def move_key(
-        self, src_bucket, src_key, dst_bucket, dst_key, move=False, overwrite=False
+        self,
+        src_bucket,
+        src_key,
+        dst_bucket,
+        dst_key,
+        move=False,
+        overwrite=False,
     ):
         """ Move key from one bucket to another.
 

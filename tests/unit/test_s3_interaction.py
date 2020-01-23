@@ -9,7 +9,9 @@ from datacoco_cloud import S3Interaction
 
 class TestS3Interaction(unittest.TestCase):
     def setUp(self):
-        self.testCls = S3Interaction(aws_access_key="", aws_secret_key="")  # nosec
+        self.testCls = S3Interaction(
+            aws_access_key="", aws_secret_key=""
+        )  # nosec
 
     def test_get_bucket(self):
         self.testCls.client = MagicMock()
@@ -74,5 +76,7 @@ class TestS3Interaction(unittest.TestCase):
     def test_move_key(self):
         self.testCls.client = MagicMock()
         self.testCls.s3 = MagicMock()
-        self.testCls.move_key(src_bucket="", src_key="", dst_bucket="", dst_key="")
+        self.testCls.move_key(
+            src_bucket="", src_key="", dst_bucket="", dst_key=""
+        )
         self.assertTrue(True)  # Assert that this line is reached without error

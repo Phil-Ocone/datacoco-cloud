@@ -42,16 +42,18 @@ class CWLInteraction:
             # ingestion_time = event['ingestionTime']
             timestamp = event["timestamp"]
             message = event["message"]
-            message_dt = datetime.utcfromtimestamp(float(timestamp) / 1000.0).strftime(
-                DATE_FMT
-            )
+            message_dt = datetime.utcfromtimestamp(
+                float(timestamp) / 1000.0
+            ).strftime(DATE_FMT)
             print(message_dt + ": " + message)
 
     def get_log_events(self, log_group, log_stream):
         """Get log events for given log stream"""
 
         resp = self.client.get_log_events(
-            logGroupName=log_group, logStreamName=log_stream, startFromHead=True
+            logGroupName=log_group,
+            logStreamName=log_stream,
+            startFromHead=True,
         )
 
         response_code = resp["ResponseMetadata"]["HTTPStatusCode"]
@@ -99,7 +101,9 @@ class CWLInteraction:
 
                 else:
                     raise ValueError(
-                        "Request failed with response code: {}".format(response_code)
+                        "Request failed with response code: {}".format(
+                            response_code
+                        )
                     )
 
             return True  # had logs

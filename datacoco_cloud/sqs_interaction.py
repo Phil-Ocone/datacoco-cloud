@@ -4,7 +4,9 @@ import json
 
 
 class SQSInteraction:
-    def __init__(self, aws_access_key, aws_secret_key, queue_name, region="us-east-1"):
+    def __init__(
+        self, aws_access_key, aws_secret_key, queue_name, region="us-east-1"
+    ):
         self.aws_access_key = aws_access_key
         self.aws_secret_key = aws_secret_key
         self.region = region
@@ -78,7 +80,8 @@ class SQSInteraction:
 
     def set_policy(self, policy):
         self.sqs.set_queue_attributes(
-            QueueUrl=self.sqs_queue_url, Attributes={"Policy": json.dumps(policy)}
+            QueueUrl=self.sqs_queue_url,
+            Attributes={"Policy": json.dumps(policy)},
         )
         print(f"Policy set: {policy}")
 
@@ -87,7 +90,8 @@ class SQSInteraction:
 
     def get_queue_count(self):
         response = self.sqs.get_queue_attributes(
-            QueueUrl=self.sqs_queue_url, AttributeNames=["ApproximateNumberOfMessages"]
+            QueueUrl=self.sqs_queue_url,
+            AttributeNames=["ApproximateNumberOfMessages"],
         )
         return response["Attributes"]["ApproximateNumberOfMessages"]
 

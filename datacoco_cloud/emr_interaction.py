@@ -91,7 +91,10 @@ class EMRCluster(object):
         # Only supports a single setup file for now
         if bootstrap_file:
             bootstrap_action = [
-                {"Name": "setup", "ScriptBootstrapAction": {"Path": bootstrap_file}}
+                {
+                    "Name": "setup",
+                    "ScriptBootstrapAction": {"Path": bootstrap_file},
+                }
             ]
         else:
             bootstrap_action = []
@@ -174,7 +177,9 @@ class EMRCluster(object):
                     "ActionOnFailure": "CANCEL_AND_WAIT",
                     "HadoopJarStep": {
                         "Jar": "s3://us-east-1.elasticmapreduce/libs/script-runner/script-runner.jar",
-                        "Args": ("%s %s" % (script_path, str(args_str))).split(),
+                        "Args": (
+                            "%s %s" % (script_path, str(args_str))
+                        ).split(),
                     },
                 },
             ],
@@ -186,7 +191,9 @@ class EMRCluster(object):
             pass
         else:
             while status in ("PENDING", "RUNNING"):
-                status, step_response = self.get_step_status(cluster_id, step_id)
+                status, step_response = self.get_step_status(
+                    cluster_id, step_id
+                )
                 print(step_response)
                 print(status)
                 sleep(60)
@@ -250,7 +257,9 @@ class EMRCluster(object):
             pass
         else:
             while status in ("PENDING", "RUNNING"):
-                status, step_response = self.get_step_status(cluster_id, step_id)
+                status, step_response = self.get_step_status(
+                    cluster_id, step_id
+                )
                 print(step_response)
                 print(status)
                 sleep(self.SLEEP_TIME * 2)
@@ -263,7 +272,9 @@ class EMRCluster(object):
         :param step_id:
         :return:
         """
-        response = self.conn.describe_step(ClusterId=cluster_id, StepId=step_id)
+        response = self.conn.describe_step(
+            ClusterId=cluster_id, StepId=step_id
+        )
         status = response["Step"]["Status"]["State"]
         return status, response
 

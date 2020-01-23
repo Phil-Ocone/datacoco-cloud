@@ -13,7 +13,9 @@ class ECSInteraction:
     wrapper on boto3 ecs
     """
 
-    def __init__(self, aws_access_key, aws_secret_key, region_name="us-east-1"):
+    def __init__(
+        self, aws_access_key, aws_secret_key, region_name="us-east-1"
+    ):
         self.conn = None
         self.aws_access_key = (aws_access_key,)
         self.aws_secret_key = (aws_secret_key,)
@@ -31,7 +33,9 @@ class ECSInteraction:
         """Wait for task to finish"""
         waiter = self.conn.get_waiter("tasks_stopped")
         waiter.wait(
-            cluster=cluster, tasks=tasks, WaiterConfig={"Delay": 10, "MaxAttempts": 720}
+            cluster=cluster,
+            tasks=tasks,
+            WaiterConfig={"Delay": 10, "MaxAttempts": 720},
         )
 
     def get_task_definition(self, task):
@@ -66,14 +70,18 @@ class ECSInteraction:
             raise RuntimeError("Could not find completed task")
 
         if response["failures"] != []:
-            raise Exception("There were failures:\n{0}".format(response["failures"]))
+            raise Exception(
+                "There were failures:\n{0}".format(response["failures"])
+            )
 
         statuses = [t["lastStatus"] for t in response["tasks"]]
 
         if not all([status == "STOPPED" for status in statuses]):
             raise Exception("Not all tasks finished! :(")
 
-        exit_codes = [c["exitCode"] for t in response["tasks"] for c in t["containers"]]
+        exit_codes = [
+            c["exitCode"] for t in response["tasks"] for c in t["containers"]
+        ]
 
         if all([exit_code == 0 for exit_code in exit_codes]):  # all goes well
             return True
@@ -112,7 +120,9 @@ class ECSInteraction:
         :param desiredStatus:
         :return:
         """
-        response = self.conn.list_tasks(cluster=cluster, desiredStatus=desiredStatus)
+        response = self.conn.list_tasks(
+            cluster=cluster, desiredStatus=desiredStatus
+        )
         return response
 
     def run_task(
@@ -141,7 +151,9 @@ class ECSInteraction:
             defaults
         )  # assumes uses aws logs?
 
-        container_defaults = defaults["taskDefinition"]["containerDefinitions"][0]
+        container_defaults = defaults["taskDefinition"][
+            "containerDefinitions"
+        ][0]
 
         overrides = {}
         container_overrides = {}
@@ -180,7 +192,9 @@ class ECSInteraction:
                 container_overrides["memory"] = 128
 
         if memory_reservation:
-            print("Using custom soft memory limit: {}".format(memory_reservation))
+            print(
+                "Using custom soft memory limit: {}".format(memory_reservation)
+            )
             container_overrides["memoryReservation"] = memory_reservation
         else:
             if "memoryReservation" in container_defaults:
@@ -206,7 +220,9 @@ class ECSInteraction:
                 }
             }
 
-            print(f"Launch type is FARGATE so using network config: {network_config}")
+            print(
+                f"Launch type is FARGATE so using network config: {network_config}"
+            )
 
             response = self.conn.run_task(
                 cluster=cluster,
@@ -249,7 +265,11 @@ class ECSInteraction:
         success = self.get_task_status(cluster, taskArns)
 
         if success:
-            print("There be {} successful task(s) with logs :)".format(len(taskArns)))
+            print(
+                "There be {} successful task(s) with logs :)".format(
+                    len(taskArns)
+                )
+            )
         else:
             print("There be unsuccessful task(s) with logs :(")
 
