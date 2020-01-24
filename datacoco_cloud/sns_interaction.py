@@ -19,6 +19,7 @@ class SNSInteraction:
             aws_secret_access_key=self.aws_secret_key,
             region_name=self.region,
         )
+        return self
 
     def create_topic(self):
         response = self.client.create_topic(Name=self.topic)

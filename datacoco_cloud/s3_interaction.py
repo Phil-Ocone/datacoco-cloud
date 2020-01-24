@@ -35,6 +35,7 @@ class S3Interaction:
             aws_secret_access_key=self.aws_secret_key,
             region_name=self.region_name,
         )
+        return self
 
     def get_bucket(self, bucket_name):
         """Get an s3 bucket obj.

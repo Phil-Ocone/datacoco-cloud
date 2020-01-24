@@ -39,6 +39,7 @@ class SESInteraction:
             aws_secret_access_key=self.aws_secret_key,
             region_name=self.aws_region,
         )
+        return self
 
     def html(self, html):
         """

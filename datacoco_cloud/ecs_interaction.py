@@ -28,6 +28,7 @@ class ECSInteraction:
             aws_secret_access_key=self.aws_secret_key,
             region_name=self.region_name,
         )
+        return self
 
     def wait_task(self, cluster, tasks):
         """Wait for task to finish"""
