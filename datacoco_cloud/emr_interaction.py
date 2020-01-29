@@ -39,6 +39,7 @@ class EMRCluster(object):
             aws_access_key=self.aws_access_key,
             region_name=self.region_name,
         )
+        return self
 
     def create_cluster(
         self,

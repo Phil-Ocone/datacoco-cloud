@@ -28,6 +28,7 @@ class AthenaInteraction:
             aws_secret_access_key=self.aws_secret_key,
         )
         print("Connected to Athena client")
+        return self
 
     def store_query(self, name, description, db, sql):
         """
