@@ -1,22 +1,38 @@
-from setuptools import setup
+import os
+import re
+from setuptools import setup, find_packages
+
+
+def get_version():
+    """
+    Get version from file
+    :return:
+    """
+    version_file = open(os.path.join("datacoco_cloud", "__version__.py"))
+    version_contents = version_file.read()
+    return re.search('__version__ = "(.*?)"', version_contents).group(1)
+
 
 setup(
-  name = 'cocloud',
-  packages = ['cocloud'],
-  version = '0.2.1',
-  license='MIT',
-  description = 'of common code utility for aws services',
-  long_description=open("README.md").read(),
-  long_description_content_type="text/markdown",
-  author = 'Paul Singman',
-  author_email = 'paul.singman@equinox.com',
-  url = 'https://github.com/equinoxfitness/datacoco.cloud',
-  download_url = 'https://github.com/equinoxfitness/datacoco.cloud/archive/v-0.2.tar.gz',
-  keywords = ['helper', 'config', 'logging', 'common'],   # Keywords that define your package best
-  install_requires=[
+    name="datacoco-cloud",
+    packages=find_packages(exclude=["tests*"]),
+    version=get_version(),
+    license="MIT",
+    description="Data common code for AWS Cloud Services by Equinox",
+    long_description=open("README.rst").read(),
+    author="Equinox Fitness",
+    url="https://github.com/equinoxfitness/datacoco-cloud",
+    install_requires=[
       'requests==2.20.0',
-      'cocore==1.2.0',
       'gevent==1.3.7',
       'boto3==1.9.203'
-    ]
+    ],
+    classifiers=[
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Developers",
+        "Natural Language :: English",
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3.6",
+    ],
 )
+
