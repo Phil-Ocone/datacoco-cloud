@@ -5,41 +5,55 @@ this module provides basic interaction with aws emr service
 import gevent.monkey
 gevent.monkey.patch_all()
 
+import os
 from time import sleep
 import boto3
+from datacoco_cloud import UNIT_TEST_KEY
 
 
 class EMRCluster(object):
     """
     wrapper on boto3 emr
     """
-    def __init__(self, config_settings='general'):
-        """
+    def __init__(
+        self,
+        temp_bucket,
+        env,
+        aws_access_key,
+        aws_secret_access_key,
+        region_name="us-east-1",
+        SLEEP_TIME=30,
+    ):
+        self.temp_bucket = "s3://" + temp_bucket + "/temp/emr/"
+        self.env = env
+        self.conn = None
+        self.SLEEP_TIME = SLEEP_TIME
 
-        :return:
-        """
-        conf = Config()[config_settings]
-        aws_access_key = conf['aws_access_key']
-        aws_secret_key = conf['aws_secret_key']
-        self.conn = boto3.client('emr',
-                                 aws_access_key_id=aws_access_key,
-                                 aws_secret_access_key=aws_secret_key,
-                                 region_name='us-east-1')
-        self.temp_bucket = 's3://' + conf['temp_bucket'] + '/temp/emr/'
-        self.env = conf['env']
+        is_test = os.environ.get(UNIT_TEST_KEY, False)
 
-    def create_cluster(self, cluster_name='emr-cluster',
-                       instance_count=3,
-                       instance_type='m5.xlarge',
-                       owner_tag='data',
-                       project_tag='default',
-                       async_mode=True,
-                       applications=None,
-                       autoTerminate=False,
-                       bootstrap_file=None,
-                       config_array=None,
-                       release_label="emr-5.17.0",
-                       log_uri=None):
+        if not is_test:
+            self.conn = boto3.client(
+                "emr",
+                aws_secret_key=aws_secret_access_key,
+                aws_access_key=aws_access_key,
+                region_name=region_name,
+            )
+
+    def create_cluster(
+        self,
+        cluster_name="emr-cluster",
+        instance_count=3,
+        instance_type="m5.xlarge",
+        owner_tag="data",
+        project_tag="default",
+        async_mode=True,
+        applications=None,
+        autoTerminate=False,
+        bootstrap_file=None,
+        config_array=None,
+        release_label="emr-5.17.0",
+        log_uri=None,
+    ):
         """
 
         :param cluster_name: emr-cluster
@@ -230,7 +244,7 @@ class EMRCluster(object):
                 status, step_response = self.get_step_status(cluster_id, step_id)
                 print(status)
                 sleep(60)
-        print(step_response)
+                print(step_response)
         return step_id, status, response
 
     def get_step_status(self, cluster_id, step_id):
@@ -258,7 +272,7 @@ class EMRCluster(object):
 
         :return:
         """
-        cluster_list = EMRCluster().list_clusters()['Clusters']
+        cluster_list = self.list_clusters()['Clusters']
         for cluster in cluster_list:
             self.kill_cluster(cluster['Id'])
 

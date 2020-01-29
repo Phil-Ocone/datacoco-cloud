@@ -1,8 +1,12 @@
+"""
+Cloud Watch Interaction tool
+"""
 import gevent.monkey
 gevent.monkey.patch_all()
-
+import os
 import boto3
 from datetime import datetime
+from datacoco_cloud import UNIT_TEST_KEY
 
 DATE_FMT = "%Y-%m-%d %H:%M:%S"
 
@@ -13,15 +17,18 @@ class CWLInteraction:
     """
 
     def __init__(self, region=None, aws_access_key=None, aws_secret_key=None):
-
+        is_test = os.environ.get(UNIT_TEST_KEY, False)
 
         try:
-            self.client = boto3.client(
-                'logs',
-                region_name = region,
-                aws_access_key_id = aws_access_key,
-                aws_secret_access_key = aws_secret_key
-            )
+            self.client = None
+
+            if not is_test:
+                self.client = boto3.client(
+                    "logs",
+                    region_name=region,
+                    aws_access_key_id=aws_access_key,
+                    aws_secret_access_key=aws_secret_key,
+                )
         except Exception as e:
             raise e
 

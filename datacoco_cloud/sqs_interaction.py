@@ -1,33 +1,36 @@
 import boto3
 from botocore.exceptions import ClientError
 import json
-
+import os
+from datacoco_cloud import UNIT_TEST_KEY
 
 class SQSInteraction:
-
-    def __init__(self, aws_access_key, aws_secret_key, queue_name, create_queue=False, region='us-east-1'):
-        self.aws_access_key = aws_access_key
-        self.aws_secret_key = aws_secret_key
-        self.region = region
-
-        self.sqs = boto3.client('sqs',
-                                aws_access_key_id=aws_access_key,
-                                aws_secret_access_key=aws_secret_key,
-                                region_name=region
-                                )
-
+    def __init__(
+        self, aws_access_key, aws_secret_key, queue_name, region="us-east-1", create_queue=False
+    ):
         self.sqs_queue_url = None
         self.sqs_queue_arn = None
         self.queue_name = queue_name
+        self.sqs = None
+        is_test = os.environ.get(UNIT_TEST_KEY, False)
 
-        if create_queue:
-            self.create_queue(self.queue_name)
+        if not is_test:
+            self.sqs = boto3.client(
+                "sqs",
+                aws_access_key_id=aws_access_key,
+                aws_secret_access_key=aws_secret_key,
+                region_name=region,
+            )
 
-        try:
-            self.init_sqs()
-        except Exception as e:
-            print(e.message)
-            print('Queue does not exist, please create the queue first.')
+            if create_queue:
+                self.create_queue(self.queue_name)
+
+            try:
+                self.init_sqs()
+            except Exception as e:
+                print(e.message)
+                print("Queue does not exist, please create the queue first.")
+
 
     def init_sqs(self):
         print('---------------\nSQS starting')

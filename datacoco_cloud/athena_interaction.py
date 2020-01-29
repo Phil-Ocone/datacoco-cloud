@@ -1,19 +1,27 @@
 import gevent.monkey
 gevent.monkey.patch_all()
 
+import os
 import boto3
 from time import sleep
-
+from datacoco_cloud import UNIT_TEST_KEY
 
 class AthenaInteraction:
     def __init__(self, aws_access_key, aws_secret_key, region=None):
         try:
-            self.client = boto3.client('athena',
-                                       region_name=region,
-                                       aws_access_key_id=aws_access_key,
-                                       aws_secret_access_key=aws_secret_key
-                                       )
-            print("Connected to Athena client")
+            self.client = None
+
+            is_test = os.environ.get(UNIT_TEST_KEY, False)
+
+            if not is_test:
+                self.client = boto3.client(
+                    "athena",
+                    region_name=region,
+                    aws_access_key_id=aws_access_key,
+                    aws_secret_access_key=aws_secret_key,
+                )
+                print("Connected to Athena client")
+
         except Exception as e:
             raise e
 

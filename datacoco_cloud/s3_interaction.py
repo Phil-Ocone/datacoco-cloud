@@ -2,21 +2,34 @@ import errno
 import os
 import boto3
 import botocore
-
+from datacoco_cloud import UNIT_TEST_KEY
 
 class S3Interaction:
     """
     Class to simplify interacting with S3 using boto3
     """
-    def __init__(self, aws_access_key, aws_secret_key):
-        self.client = boto3.client('s3',
-                                   aws_access_key_id=aws_access_key,
-                                   aws_secret_access_key=aws_secret_key,
-                                   region_name='us-east-1')
-        self.s3 = boto3.resource('s3',
-                                 aws_access_key_id=aws_access_key,
-                                 aws_secret_access_key=aws_secret_key,
-                                 region_name='us-east-1')
+
+    def __init__(
+        self, aws_access_key, aws_secret_key, region_name="us-east-1"
+    ):
+        self.client = None
+        self.s3 = None
+
+        is_test = os.environ.get(UNIT_TEST_KEY, False)
+
+        if not is_test:
+            self.client = boto3.client(
+                "s3",
+                aws_access_key_id=aws_access_key,
+                aws_secret_access_key=aws_secret_key,
+                region_name=region_name,
+            )
+            self.s3 = boto3.resource(
+                "s3",
+                aws_access_key_id=aws_access_key,
+                aws_secret_access_key=aws_secret_key,
+                region_name=region_name,
+            )
 
     def get_bucket(self, bucket_name):
         """Get an s3 bucket obj.
