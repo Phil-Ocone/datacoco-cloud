@@ -51,7 +51,7 @@ class SQSInteraction:
                 self.queue_name,
             )
 
-        print(f"Queue exists: {self.sqs_queue_url is not None}")
+        print(f"Queue exists: {self.sqs_queue_url is not None}")  # nosec
 
         if not self.sqs_queue_url:
             raise ValueError("SQS returned a result without a QueueUrl in it")
@@ -79,7 +79,8 @@ class SQSInteraction:
 
     def set_policy(self, policy):
         self.sqs.set_queue_attributes(
-            QueueUrl=self.sqs_queue_url, Attributes={"Policy": json.dumps(policy)}
+            QueueUrl=self.sqs_queue_url,
+            Attributes={"Policy": json.dumps(policy)},
         )
         print(f"Policy set: {policy}")
 
@@ -88,7 +89,8 @@ class SQSInteraction:
 
     def get_queue_count(self):
         response = self.sqs.get_queue_attributes(
-            QueueUrl=self.sqs_queue_url, AttributeNames=["ApproximateNumberOfMessages"]
+            QueueUrl=self.sqs_queue_url,
+            AttributeNames=["ApproximateNumberOfMessages"],
         )
         return response["Attributes"]["ApproximateNumberOfMessages"]
 

@@ -25,7 +25,7 @@ It is recommended to use the steps below to set up a virtual environment for dev
 
 ```
 python3 -m venv <virtual env name>
-source venv/bin/activate
+source <virtual env name>/bin/activate
 pip install --upgrade pip
 pip install -r requirements_dev.txt
 ```

@@ -175,7 +175,13 @@ class S3Interaction:
             return False
 
     def move_key(
-        self, src_bucket, src_key, dst_bucket, dst_key, move=False, overwrite=False
+        self,
+        src_bucket,
+        src_key,
+        dst_bucket,
+        dst_key,
+        move=False,
+        overwrite=False,
     ):
         """ Move key from one bucket to another.
 

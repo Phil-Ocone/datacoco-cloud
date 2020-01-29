@@ -90,12 +90,19 @@ class AthenaInteraction:
             if partitions is None:
                 sql = "MSCK REPAIR TABLE {}".format(table)
             else:
-                if type(partitions) is not dict and type(partitions) is not list:
-                    raise Exception("Partitions must be passed as a dict or list")
+                if (
+                    type(partitions) is not dict
+                    and type(partitions) is not list
+                ):
+                    raise Exception(
+                        "Partitions must be passed as a dict or list"
+                    )
                 if type(partitions) is list:
                     part_str = ""
                     for d in partitions:
-                        each_partition = ",".join([i + "='" + d[i] + "'" for i in d])
+                        each_partition = ",".join(
+                            [i + "='" + d[i] + "'" for i in d]
+                        )
                         part_str += " partition ({})".format(each_partition)
                     sql = """ALTER TABLE {} add{}""".format(table, part_str)
                 elif type(partitions) is dict:
@@ -113,7 +120,9 @@ class AthenaInteraction:
         except Exception as e:
             raise e
 
-    def run_existing_query(self, query_name, output_location=None, optional_vars=[]):
+    def run_existing_query(
+        self, query_name, output_location=None, optional_vars=[]
+    ):
         """
         Will find query by its string name and return the sql and db name
         Optional vars allows dynamic variables to be passed to a saved query
@@ -149,22 +158,35 @@ class AthenaInteraction:
                 QueryExecutionId=query_execution_id
             )
 
-            if execution_details["QueryExecution"]["Status"]["State"] == "SUCCEEDED":
+            if (
+                execution_details["QueryExecution"]["Status"]["State"]
+                == "SUCCEEDED"
+            ):
                 break
-            if execution_details["QueryExecution"]["Status"]["State"] == "FAILED":
+            if (
+                execution_details["QueryExecution"]["Status"]["State"]
+                == "FAILED"
+            ):
                 raise Exception(
-                    execution_details["QueryExecution"]["Status"]["StateChangeReason"]
+                    execution_details["QueryExecution"]["Status"][
+                        "StateChangeReason"
+                    ]
                 )
             if max_poll_time == 0:
-                return "Query took too long. Query S3 at {} to fetch the results or \
+                return (
+                    "Query took too long. Query S3 at {}"
+                    " to fetch the results or \
                     query with the following QueryExecutionId {}".format(
-                    output_location, query_execution_id
+                        output_location, query_execution_id
+                    )
                 )
 
             sleep(poll_interval)
             print("Poll time left: ", max_poll_time)
             max_poll_time -= poll_interval
-        results = self.client.get_query_results(QueryExecutionId=query_execution_id)
+        results = self.client.get_query_results(
+            QueryExecutionId=query_execution_id
+        )
 
         return results, execution_details
 
@@ -208,7 +230,8 @@ class AthenaInteraction:
         )
 
         # If the results are not ready then being polling process
-        if execution_details["QueryExecution"]["Status"]["State"] == "SUCCEEDED":
+        state = execution_details["QueryExecution"]["Status"]["State"]
+        if state == "SUCCEEDED":
             results = self.client.get_query_results(
                 QueryExecutionId=response["QueryExecutionId"]
             )
@@ -220,7 +243,9 @@ class AthenaInteraction:
         query_id = response["QueryExecutionId"]
         print(
             "Data Scanned (KB): ",
-            execution_details["QueryExecution"]["Statistics"]["DataScannedInBytes"]
+            execution_details["QueryExecution"]["Statistics"][
+                "DataScannedInBytes"
+            ]
             / 1000.0,
         )
         print(
@@ -235,7 +260,7 @@ class AthenaInteraction:
 
     def format_results(self, results, delimiter):
         data_table = ""
-        for index, row in enumerate(results["ResultSet"]["Rows"]):
+        for row in results["ResultSet"]["Rows"]:
             temp_row = []
             for values in row["Data"]:
                 if "VarCharValue" in values:

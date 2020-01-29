@@ -130,7 +130,9 @@ class Subscriber(object):
         if "Statement" not in policy:
             statement = queue_policy_statement
             statement["Resource"] = self.sqsInteraction.sqs_queue_arn
-            statement["Condition"]["StringLike"]["aws:SourceArn"] = self.sns_topic_arn
+            statement["Condition"]["StringLike"][
+                "aws:SourceArn"
+            ] = self.sns_topic_arn
             policy["Statement"] = [statement]
 
         self.sqsInteraction.set_policy(policy)

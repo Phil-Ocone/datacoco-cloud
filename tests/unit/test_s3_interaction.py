@@ -76,5 +76,7 @@ class TestS3Interaction(unittest.TestCase):
     def test_move_key(self):
         self.testCls.client = MagicMock()
         self.testCls.s3 = MagicMock()
-        self.testCls.move_key(src_bucket="", src_key="", dst_bucket="", dst_key="")
+        self.testCls.move_key(
+            src_bucket="", src_key="", dst_bucket="", dst_key=""
+        )
         self.assertTrue(True)  # Assert that this line is reached without error
