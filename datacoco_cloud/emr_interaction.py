@@ -3,6 +3,7 @@
 this module provides basic interaction with aws emr service
 """
 import gevent.monkey
+
 gevent.monkey.patch_all()
 
 import os
@@ -15,6 +16,7 @@ class EMRCluster(object):
     """
     wrapper on boto3 emr
     """
+
     def __init__(
         self,
         temp_bucket,
@@ -67,8 +69,15 @@ class EMRCluster(object):
         if applications:
             app_list = applications
         else:
-            app_list = [{'Name':'Hadoop'}, {'Name': 'Hive'}, {'Name': 'Hue'}, {'Name': 'Spark'},
-                          {'Name': 'HCatalog'}, {'Name': 'Presto'}, {'Name': 'Mahout'}]
+            app_list = [
+                {"Name": "Hadoop"},
+                {"Name": "Hive"},
+                {"Name": "Hue"},
+                {"Name": "Spark"},
+                {"Name": "HCatalog"},
+                {"Name": "Presto"},
+                {"Name": "Mahout"},
+            ]
 
         if autoTerminate:
             KeepJobFlowAliveWhenNoSteps = False
@@ -82,10 +91,9 @@ class EMRCluster(object):
 
         # Only supports a single setup file for now
         if bootstrap_file:
-            bootstrap_action = [{
-                'Name': 'setup',
-                'ScriptBootstrapAction': {'Path': bootstrap_file}
-            }]
+            bootstrap_action = [
+                {"Name": "setup", "ScriptBootstrapAction": {"Path": bootstrap_file}}
+            ]
         else:
             bootstrap_action = []
 
@@ -93,68 +101,55 @@ class EMRCluster(object):
             log_uri = self.temp_bucket
 
         response = self.conn.run_job_flow(
-            Name= '-'.join([self.env, cluster_name]),
+            Name="-".join([self.env, cluster_name]),
             LogUri=log_uri,
             ReleaseLabel=release_label,
             VisibleToAllUsers=True,
             Instances={
-                'MasterInstanceType': instance_type,
-                'SlaveInstanceType': instance_type,
-                'InstanceCount': instance_count,
-                'Ec2KeyName': 'DataTeam-EMR',
-                'KeepJobFlowAliveWhenNoSteps': KeepJobFlowAliveWhenNoSteps,
-                'TerminationProtected': False,
-                'Ec2SubnetId': 'subnet-2a71665e',
-                'EmrManagedMasterSecurityGroup': 'sg-78e8ae03',
-                'EmrManagedSlaveSecurityGroup': 'sg-7ee8ae05',
-                'ServiceAccessSecurityGroup': 'sg-7de8ae06',
-                'AdditionalMasterSecurityGroups': [
-                    'sg-a0b4d7c7',
-                ],
+                "MasterInstanceType": instance_type,
+                "SlaveInstanceType": instance_type,
+                "InstanceCount": instance_count,
+                "Ec2KeyName": "DataTeam-EMR",
+                "KeepJobFlowAliveWhenNoSteps": KeepJobFlowAliveWhenNoSteps,
+                "TerminationProtected": False,
+                "Ec2SubnetId": "subnet-2a71665e",
+                "EmrManagedMasterSecurityGroup": "sg-78e8ae03",
+                "EmrManagedSlaveSecurityGroup": "sg-7ee8ae05",
+                "ServiceAccessSecurityGroup": "sg-7de8ae06",
+                "AdditionalMasterSecurityGroups": ["sg-a0b4d7c7"],
             },
-            JobFlowRole='EMR_EC2_DefaultRole',
-            ServiceRole='EMR_DefaultRole',
+            JobFlowRole="EMR_EC2_DefaultRole",
+            ServiceRole="EMR_DefaultRole",
             Applications=app_list,
             BootstrapActions=bootstrap_action,
-            Configurations=configurations
+            Configurations=configurations,
         )
 
-        cluster_id = response['JobFlowId']
-        status = 'STARTING'
+        cluster_id = response["JobFlowId"]
+        status = "STARTING"
 
         if async_mode:
             pass
         else:
-            while status in ('STARTING', 'BOOTSTRAPPING'):
-                status = self.conn.describe_cluster(
-                    ClusterId=cluster_id)['Cluster']['Status']['State']
+            while status in ("STARTING", "BOOTSTRAPPING"):
+                status = self.conn.describe_cluster(ClusterId=cluster_id)["Cluster"][
+                    "Status"
+                ]["State"]
                 print(status)
                 sleep(30)
 
-        sleep(30) # give the cluster some time to wake up :)
+        sleep(30)  # give the cluster some time to wake up :)
 
         tag_response = self.conn.add_tags(
             ResourceId=str(cluster_id),
             Tags=[
-                {
-                    'Key': 'owner',
-                    'Value': owner_tag
-                },
-                {
-                    'Key': 'application',
-                    'Value': 'emr'
-                },
-                {
-                    'Key': 'environment',
-                    'Value': self.env
-                },
-                {
-                    'Key': 'project',
-                    'Value': project_tag
-                }
-            ]
+                {"Key": "owner", "Value": owner_tag},
+                {"Key": "application", "Value": "emr"},
+                {"Key": "environment", "Value": self.env},
+                {"Key": "project", "Value": project_tag},
+            ],
         )
-        print('tagging response', tag_response)
+        print("tagging response", tag_response)
 
         return cluster_id, status, response
 
@@ -164,42 +159,47 @@ class EMRCluster(object):
         :return:
         """
         clusters = self.conn.list_clusters(
-            ClusterStates=['STARTING', 'BOOTSTRAPPING', 'RUNNING', 'WAITING'])
+            ClusterStates=["STARTING", "BOOTSTRAPPING", "RUNNING", "WAITING"]
+        )
         return clusters
 
     def step_script_submit(self, cluster_id, script_path, async_mode=True, args=[]):
-        args_str = ' '.join(args)
+        args_str = " ".join(args)
 
         response = self.conn.add_job_flow_steps(
             JobFlowId=cluster_id,
             Steps=[
                 {
-                    'Name': script_path.split('/')[-1],
-                    'ActionOnFailure': 'CANCEL_AND_WAIT',
-                    'HadoopJarStep': {
-                        'Jar': 's3://us-east-1.elasticmapreduce/libs/script-runner/script-runner.jar',
-                        'Args': (
-                            '%s %s' % (script_path, str(args_str))
-                        ).split(),
-                    }
-                },
-            ]
+                    "Name": script_path.split("/")[-1],
+                    "ActionOnFailure": "CANCEL_AND_WAIT",
+                    "HadoopJarStep": {
+                        "Jar": "s3://us-east-1.elasticmapreduce/libs/script-runner/script-runner.jar",
+                        "Args": ("%s %s" % (script_path, str(args_str))).split(),
+                    },
+                }
+            ],
         )
-        status = 'RUNNING'
-        step_id = response['StepIds'][0]
+        status = "RUNNING"
+        step_id = response["StepIds"][0]
 
         if async_mode:
             pass
         else:
-            while status in ('PENDING', 'RUNNING'):
+            while status in ("PENDING", "RUNNING"):
                 status, step_response = self.get_step_status(cluster_id, step_id)
                 print(status)
                 sleep(60)
         return step_id, status, response
 
-    def step_spark_submit(self, cluster_id, script_path="/home/hadoop/run.py",
-                          num_executors='2', executor_memory='4G', async_mode=True,
-                          args=[]):
+    def step_spark_submit(
+        self,
+        cluster_id,
+        script_path="/home/hadoop/run.py",
+        num_executors="2",
+        executor_memory="4G",
+        async_mode=True,
+        args=[],
+    ):
         """
         :param cluster_id:
         :param script_path: this will be either local on master node or s3://path
@@ -210,37 +210,43 @@ class EMRCluster(object):
         :return:
         """
 
-        args_str = ' '.join(args)
+        args_str = " ".join(args)
 
         response = self.conn.add_job_flow_steps(
             JobFlowId=cluster_id,
             Steps=[
                 {
-                    'Name': script_path.split('/')[-1],
-                    'ActionOnFailure': 'CANCEL_AND_WAIT',
-                    'HadoopJarStep': {
-                        'Jar': 'command-runner.jar',
-                        'Args': (
-                            'spark-submit --deploy-mode cluster '
-                            '--master yarn-cluster '
-                            '--num-executors %s '
-                            '--executor-memory %s '
-                            '%s '
-                            '%s' % (str(num_executors),
-                                    executor_memory, script_path, str(args_str))).split(),
-                    }
-                },
-                ]
+                    "Name": script_path.split("/")[-1],
+                    "ActionOnFailure": "CANCEL_AND_WAIT",
+                    "HadoopJarStep": {
+                        "Jar": "command-runner.jar",
+                        "Args": (
+                            "spark-submit --deploy-mode cluster "
+                            "--master yarn-cluster "
+                            "--num-executors %s "
+                            "--executor-memory %s "
+                            "%s "
+                            "%s"
+                            % (
+                                str(num_executors),
+                                executor_memory,
+                                script_path,
+                                str(args_str),
+                            )
+                        ).split(),
+                    },
+                }
+            ],
         )
         print(response)
 
-        status = 'RUNNING'
-        step_id = response['StepIds'][0]
+        status = "RUNNING"
+        step_id = response["StepIds"][0]
 
         if async_mode:
             pass
         else:
-            while status in ('PENDING', 'RUNNING'):
+            while status in ("PENDING", "RUNNING"):
                 status, step_response = self.get_step_status(cluster_id, step_id)
                 print(status)
                 sleep(60)
@@ -254,7 +260,7 @@ class EMRCluster(object):
         :return:
         """
         response = self.conn.describe_step(ClusterId=cluster_id, StepId=step_id)
-        status = response['Step']['Status']['State']
+        status = response["Step"]["Status"]["State"]
         return status, response
 
     def kill_cluster(self, cluster_id):
@@ -263,8 +269,7 @@ class EMRCluster(object):
         :param cluster_id:
         :return:
         """
-        response = self.conn.terminate_job_flows(
-            JobFlowIds=[cluster_id,])
+        response = self.conn.terminate_job_flows(JobFlowIds=[cluster_id])
         return response
 
     def kill_all_clusters(self):
@@ -272,12 +277,21 @@ class EMRCluster(object):
 
         :return:
         """
-        cluster_list = self.list_clusters()['Clusters']
+        cluster_list = self.list_clusters()["Clusters"]
         for cluster in cluster_list:
-            self.kill_cluster(cluster['Id'])
+            self.kill_cluster(cluster["Id"])
 
-    def create_run_kill(self, script_path, cluster_name=None, instance_count=2,
-                        num_executors=2, executor_memory='4G', bootstrap_file=None, release_label="emr-5.17.0", args=[]):
+    def create_run_kill(
+        self,
+        script_path,
+        cluster_name=None,
+        instance_count=2,
+        num_executors=2,
+        executor_memory="4G",
+        bootstrap_file=None,
+        release_label="emr-5.17.0",
+        args=[],
+    ):
         """
         a super simple method for creating a cluster, running a job and killing it
         runs syncronously of course
@@ -286,20 +300,27 @@ class EMRCluster(object):
         :return:
         """
         if cluster_name is None:
-            cluster_name = script_path[script_path.rfind('/')+1:]
-        print('-------creating cluster')
-        cluster_id, cluster_status, cluster_response = \
-            self.create_cluster(cluster_name, async_mode=False, instance_count=instance_count, bootstrap_file=bootstrap_file, release_label=release_label)
-        print('-------running script')
-        step_id, status, response = self.step_spark_submit(cluster_id=cluster_id,
-                                                           script_path=script_path,
-                                                           args=args,
-                                                           async_mode=False,
-                                                           num_executors=num_executors,
-                                                           executor_memory=executor_memory)
+            cluster_name = script_path[script_path.rfind("/") + 1 :]
+        print("-------creating cluster")
+        cluster_id, cluster_status, cluster_response = self.create_cluster(
+            cluster_name,
+            async_mode=False,
+            instance_count=instance_count,
+            bootstrap_file=bootstrap_file,
+            release_label=release_label,
+        )
+        print("-------running script")
+        step_id, status, response = self.step_spark_submit(
+            cluster_id=cluster_id,
+            script_path=script_path,
+            args=args,
+            async_mode=False,
+            num_executors=num_executors,
+            executor_memory=executor_memory,
+        )
 
-        if status == 'COMPLETED':
-            print('-------killing cluster')
+        if status == "COMPLETED":
+            print("-------killing cluster")
             self.kill_cluster(cluster_id)
         # else we leave cluster running
 

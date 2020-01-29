@@ -3,12 +3,21 @@ import os
 from past.builtins import basestring
 from datacoco_cloud import UNIT_TEST_KEY
 
+
 class SESInteraction:
     """
     wrapper on boto3 ses
     """
 
-    def __init__(self, to, subject, sender, aws_access_key, aws_secret_key, aws_region='us-east-1'):
+    def __init__(
+        self,
+        to,
+        subject,
+        sender,
+        aws_access_key,
+        aws_secret_key,
+        aws_region="us-east-1",
+    ):
         """
         :param to:
         :param subject:
@@ -19,7 +28,7 @@ class SESInteraction:
         self.subject = subject
         self._html = None
         self._text = None
-        self._format = 'html'
+        self._format = "html"
         self.def_sender = sender
 
         is_test = os.environ.get(UNIT_TEST_KEY, False)
@@ -61,27 +70,16 @@ class SESInteraction:
         if not from_addr:
             from_addr = self.def_sender
         if not self._html and not self._text:
-            raise Exception('You must provide a text or html body.')
+            raise Exception("You must provide a text or html body.")
         if not self._html:
-            self._format = 'text'
+            self._format = "text"
             body = self._text
 
         return self.connection.send_email(
             Source=from_addr,
-            Destination={
-                'ToAddresses': self.to
-            },
+            Destination={"ToAddresses": self.to},
             Message={
-                'Subject': {
-                    'Data': self.subject
-                },
-                'Body': {
-                    'Text': {
-                        'Data': body
-                    },
-                    'Html': {
-                        'Data': body
-                    }
-                }
-            }
+                "Subject": {"Data": self.subject},
+                "Body": {"Text": {"Data": body}, "Html": {"Data": body}},
+            },
         )
