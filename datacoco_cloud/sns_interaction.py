@@ -5,7 +5,9 @@ from datacoco_cloud import UNIT_TEST_KEY
 
 
 class SNSInteraction:
-    def __init__(self, aws_access_key, aws_secret_key, topic, region="us-east-1"):
+    def __init__(
+        self, aws_access_key, aws_secret_key, topic, region="us-east-1"
+    ):
         self.topic = topic
         self.client = None
 

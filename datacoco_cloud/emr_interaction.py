@@ -119,7 +119,7 @@ class EMRCluster(object):
                 "EmrManagedMasterSecurityGroup": "sg-78e8ae03",
                 "EmrManagedSlaveSecurityGroup": "sg-7ee8ae05",
                 "ServiceAccessSecurityGroup": "sg-7de8ae06",
-                "AdditionalMasterSecurityGroups": ["sg-a0b4d7c7",],
+                "AdditionalMasterSecurityGroups": ["sg-a0b4d7c7"],
             },
             JobFlowRole="EMR_EC2_DefaultRole",
             ServiceRole="EMR_DefaultRole",
@@ -182,7 +182,7 @@ class EMRCluster(object):
                             "%s %s" % (script_path, str(args_str))
                         ).split(),
                     },
-                },
+                }
             ],
         )
         status = "RUNNING"
@@ -227,21 +227,27 @@ class EMRCluster(object):
             JobFlowId=cluster_id,
             Steps=[
                 {
-                    'Name': script_path.split('/')[-1],
-                    'ActionOnFailure': 'CANCEL_AND_WAIT',
-                    'HadoopJarStep': {
-                        'Jar': 'command-runner.jar',
-                        'Args': (
-                            'spark-submit --deploy-mode cluster '
-                            '--master yarn-cluster '
-                            '--num-executors %s '
-                            '--executor-memory %s '
-                            '%s '
-                            '%s' % (str(num_executors),
-                                    executor_memory, script_path, str(args_str))).split(),
-                    }
-                },
-                ]
+                    "Name": script_path.split("/")[-1],
+                    "ActionOnFailure": "CANCEL_AND_WAIT",
+                    "HadoopJarStep": {
+                        "Jar": "command-runner.jar",
+                        "Args": (
+                            "spark-submit --deploy-mode cluster "
+                            "--master yarn-cluster "
+                            "--num-executors %s "
+                            "--executor-memory %s "
+                            "%s "
+                            "%s"
+                            % (
+                                str(num_executors),
+                                executor_memory,
+                                script_path,
+                                str(args_str),
+                            )
+                        ).split(),
+                    },
+                }
+            ],
         )
         print(response)
 
@@ -279,7 +285,7 @@ class EMRCluster(object):
         :param cluster_id:
         :return:
         """
-        response = self.conn.terminate_job_flows(JobFlowIds=[cluster_id,])
+        response = self.conn.terminate_job_flows(JobFlowIds=[cluster_id])
         return response
 
     def kill_all_clusters(self):

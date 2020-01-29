@@ -11,7 +11,9 @@ from datacoco_cloud.cwl_interaction import CWLInteraction
 class TestCWLInteraction(unittest.TestCase):
     def setUp(self):
         os.environ[UNIT_TEST_KEY] = "True"
-        self.testCls = CWLInteraction(region="", aws_secret_key="", aws_access_key="")
+        self.testCls = CWLInteraction(
+            region="", aws_secret_key="", aws_access_key=""
+        )
 
     def test_parse_and_print_events(self):
         self.testCls.client = MagicMock()

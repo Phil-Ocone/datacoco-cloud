@@ -39,13 +39,9 @@ class TestECSInteraction(unittest.TestCase):
         self.testCls.conn = MagicMock()
         self.testCls.conn.describe_tasks.return_value = {
             "failures": [],
-<<<<<<< HEAD
-            "tasks": [{"lastStatus": "STOPPED", "containers": [{"exitCode": 0}]}],
-=======
             "tasks": [
                 {"lastStatus": "STOPPED", "containers": [{"exitCode": 0}]}
             ],
->>>>>>> 1b84a42cc763b8e4fb7999d6fd883b69b921b01f
         }
         self.testCls.get_task_status()
         self.assertTrue(True)  # Assert that this line is reached without error
@@ -80,7 +76,9 @@ class TestECSInteraction(unittest.TestCase):
         self.testCls.conn = MagicMock()
         self.testCls.conn.describe_tasks.return_value = {
             "failures": [],
-            "tasks": [{"lastStatus": "STOPPED", "containers": [{"exitCode": 0}]}],
+            "tasks": [
+                {"lastStatus": "STOPPED", "containers": [{"exitCode": 0}]}
+            ],
         }
         self.testCls.conn.run_task.return_value = {
             "failures": None,

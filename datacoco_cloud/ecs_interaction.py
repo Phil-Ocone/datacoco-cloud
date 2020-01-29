@@ -17,7 +17,9 @@ class ECSInteraction:
     wrapper on boto3 ecs
     """
 
-    def __init__(self, aws_access_key, aws_secret_key, region_name="us-east-1"):
+    def __init__(
+        self, aws_access_key, aws_secret_key, region_name="us-east-1"
+    ):
         self.conn = None
 
         is_test = os.environ.get(UNIT_TEST_KEY, False)

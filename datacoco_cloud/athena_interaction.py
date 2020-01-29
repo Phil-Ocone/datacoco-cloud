@@ -80,7 +80,12 @@ class AthenaInteraction:
         raise Exception("Query not found")
 
     def repair_table(
-        self, db_name, table, output_location=None, partitions=None, s3_data=None
+        self,
+        db_name,
+        table,
+        output_location=None,
+        partitions=None,
+        s3_data=None,
     ):
         """
         Will try and load all partitions if none are specified

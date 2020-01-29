@@ -11,7 +11,9 @@ from datacoco_cloud.s3_interaction import S3Interaction
 class TestS3Interaction(unittest.TestCase):
     def setUp(self):
         os.environ[UNIT_TEST_KEY] = "True"
-        self.testCls = S3Interaction(aws_access_key="", aws_secret_key="")  # nosec
+        self.testCls = S3Interaction(
+            aws_access_key="", aws_secret_key=""
+        )  # nosec
 
     def test_get_bucket(self):
         self.testCls.client = MagicMock()
