@@ -4,11 +4,14 @@ Test ECS Interaction
 import unittest
 from unittest.mock import MagicMock
 
-from datacoco_cloud import ECSInteraction
+import os
+from datacoco_cloud import UNIT_TEST_KEY
+from datacoco_cloud.ecs_interaction import ECSInteraction
 
 
 class TestECSInteraction(unittest.TestCase):
     def setUp(self):
+        os.environ[UNIT_TEST_KEY] = "True"
         self.testCls = ECSInteraction(aws_access_key="", aws_secret_key="")
 
     def test_wait_task(self):
@@ -79,7 +82,7 @@ class TestECSInteraction(unittest.TestCase):
         }
         self.testCls.conn.run_task.return_value = {
             "failures": None,
-            "tasks": [{"taskArn": "any",}],
+            "tasks": [{"taskArn": "any"}],
         }
         self.testCls.run_task(cluster="", task_definition="")
         self.assertTrue(True)  # Assert that this line is reached without error

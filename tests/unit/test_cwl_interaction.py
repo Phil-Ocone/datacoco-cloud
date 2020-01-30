@@ -1,14 +1,16 @@
 """
 Test Cloud Watch Log
 """
+import os
 import unittest
 from unittest.mock import MagicMock
-
-from datacoco_cloud import CWLInteraction
+from datacoco_cloud import UNIT_TEST_KEY
+from datacoco_cloud.cwl_interaction import CWLInteraction
 
 
 class TestCWLInteraction(unittest.TestCase):
     def setUp(self):
+        os.environ[UNIT_TEST_KEY] = "True"
         self.testCls = CWLInteraction(
             region="", aws_secret_key="", aws_access_key=""
         )

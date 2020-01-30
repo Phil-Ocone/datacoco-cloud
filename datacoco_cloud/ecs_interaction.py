@@ -2,7 +2,9 @@
 """
 this module provides basic interaction with aws ecs service
 """
+import os
 import boto3
+from datacoco_cloud import UNIT_TEST_KEY
 import gevent.monkey
 
 gevent.monkey.patch_all()
@@ -17,18 +19,16 @@ class ECSInteraction:
         self, aws_access_key, aws_secret_key, region_name="us-east-1"
     ):
         self.conn = None
-        self.aws_access_key = (aws_access_key,)
-        self.aws_secret_key = (aws_secret_key,)
-        self.region_name = region_name
 
-    def init(self):
-        self.conn = boto3.client(
-            "ecs",
-            aws_access_key_id=self.aws_access_key,
-            aws_secret_access_key=self.aws_secret_key,
-            region_name=self.region_name,
-        )
-        return self
+        is_test = os.environ.get(UNIT_TEST_KEY, False)
+
+        if not is_test:
+            self.conn = boto3.client(
+                "ecs",
+                aws_access_key_id=aws_access_key,
+                aws_secret_access_key=aws_secret_key,
+                region_name=region_name,
+            )
 
     def wait_task(self, cluster, tasks):
         """Wait for task to finish"""

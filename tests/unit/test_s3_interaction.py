@@ -2,13 +2,15 @@
 Test S3 Interaction
 """
 import unittest
+import os
 from unittest.mock import MagicMock
-
-from datacoco_cloud import S3Interaction
+from datacoco_cloud import UNIT_TEST_KEY
+from datacoco_cloud.s3_interaction import S3Interaction
 
 
 class TestS3Interaction(unittest.TestCase):
     def setUp(self):
+        os.environ[UNIT_TEST_KEY] = "True"
         self.testCls = S3Interaction(
             aws_access_key="", aws_secret_key=""
         )  # nosec

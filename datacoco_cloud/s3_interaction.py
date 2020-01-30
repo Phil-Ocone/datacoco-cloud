@@ -2,6 +2,7 @@ import errno
 import os
 import boto3
 import botocore
+from datacoco_cloud import UNIT_TEST_KEY
 
 
 class S3Interaction:
@@ -14,28 +15,22 @@ class S3Interaction:
     ):
         self.client = None
         self.s3 = None
-        self.aws_access_key = aws_access_key
-        self.aws_secret_key = aws_secret_key
-        self.region_name = region_name
 
-    def init(self):
-        """
-        Create instance for s3 clients
-        :return:
-        """
-        self.client = boto3.client(
-            "s3",
-            aws_access_key_id=self.aws_access_key,
-            aws_secret_access_key=self.aws_secret_key,
-            region_name=self.region_name,
-        )
-        self.s3 = boto3.resource(
-            "s3",
-            aws_access_key_id=self.aws_access_key,
-            aws_secret_access_key=self.aws_secret_key,
-            region_name=self.region_name,
-        )
-        return self
+        is_test = os.environ.get(UNIT_TEST_KEY, False)
+
+        if not is_test:
+            self.client = boto3.client(
+                "s3",
+                aws_access_key_id=aws_access_key,
+                aws_secret_access_key=aws_secret_key,
+                region_name=region_name,
+            )
+            self.s3 = boto3.resource(
+                "s3",
+                aws_access_key_id=aws_access_key,
+                aws_secret_access_key=aws_secret_key,
+                region_name=region_name,
+            )
 
     def get_bucket(self, bucket_name):
         """Get an s3 bucket obj.
