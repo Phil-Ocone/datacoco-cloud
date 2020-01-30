@@ -2,14 +2,14 @@
 """
 this module provides basic interaction with aws emr service
 """
+import os
+import boto3
+from datacoco_cloud import UNIT_TEST_KEY
 import gevent.monkey
 
 gevent.monkey.patch_all()
 
-import os
 from time import sleep
-import boto3
-from datacoco_cloud import UNIT_TEST_KEY
 
 
 class EMRCluster(object):

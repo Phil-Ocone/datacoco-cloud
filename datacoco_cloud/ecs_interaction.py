@@ -2,14 +2,12 @@
 """
 this module provides basic interaction with aws ecs service
 """
-import boto3
-import gevent.monkey
-
-gevent.monkey.patch_all()
-
 import os
 import boto3
 from datacoco_cloud import UNIT_TEST_KEY
+import gevent.monkey
+
+gevent.monkey.patch_all()
 
 
 class ECSInteraction:

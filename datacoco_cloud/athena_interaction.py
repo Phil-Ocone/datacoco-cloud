@@ -1,11 +1,11 @@
+import os
+from datacoco_cloud import UNIT_TEST_KEY
 import gevent.monkey
 
 gevent.monkey.patch_all()
 
-import os
 import boto3
 from time import sleep
-from datacoco_cloud import UNIT_TEST_KEY
 
 
 class AthenaInteraction:
