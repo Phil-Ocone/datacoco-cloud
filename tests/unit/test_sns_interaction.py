@@ -20,20 +20,25 @@ class TestSNSInteraction(unittest.TestCase):
         self.testCls.create_topic()
         self.assertTrue(True)  # Assert that this line is reached without error
 
-    # FIXME
-    # def test_create_publisher(self):
-    #     self.testCls.client = MagicMock()
-    #     self.testCls.client.list_topics.return_value = {
-    #         "Topics": [{"TopicArn": "test"}]
-    #     }
-    #     self.testCls.create_publisher()
-    #     self.assertTrue(True)  # Assert that this line is reached without error
+    def test_create_publisher_topic_does_not_exist(self):
+        self.testCls.client = MagicMock()
+        self.testCls.client.list_topics.return_value = {
+            "Topics": [{"TopicArn": "test"}]
+        }
 
-    # FIXME
-    # def test_create_subscriber(self):
-    #     self.testCls.client = MagicMock()
-    #     self.testCls.client.list_topics.return_value = {
-    #         "Topics": [{"TopicArn": "test"}]
-    #     }
-    #     self.testCls.create_subscriber(sqs_interaction=MagicMock())
-    #     self.assertTrue(True)  # Assert that this line is reached without error
+        try:
+            self.testCls.create_publisher()
+            self.assertTrue(False)
+        except ValueError as v:
+            self.assertTrue(str(v).startswith("Topic does not exist"))
+
+    def test_create_subscriber_topic_does_not_exist(self):
+        self.testCls.client = MagicMock()
+        self.testCls.client.list_topics.return_value = {
+            "Topics": [{"TopicArn": "test"}]
+        }
+        try:
+            self.testCls.create_subscriber(sqs_interaction=MagicMock())
+            self.assertTrue(False)
+        except ValueError as v:
+            self.assertTrue(str(v).startswith("Topic does not exist"))

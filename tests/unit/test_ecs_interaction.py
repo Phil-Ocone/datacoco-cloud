@@ -34,7 +34,6 @@ class TestECSInteraction(unittest.TestCase):
         self.testCls.stop_task(cluster="", task="", reason="")
         self.assertTrue(True)  # Assert that this line is reached without error
 
-    # FIXME this can have more tests
     def test_get_task_status(self):
         self.testCls.conn = MagicMock()
         self.testCls.conn.describe_tasks.return_value = {
@@ -45,6 +44,46 @@ class TestECSInteraction(unittest.TestCase):
         }
         self.testCls.get_task_status()
         self.assertTrue(True)  # Assert that this line is reached without error
+
+    def test_get_task_status_runtime_error(self):
+        self.testCls.conn = MagicMock()
+        self.testCls.conn.describe_tasks.return_value = {
+            "failures": [],
+            "tasks": None,
+        }
+        try:
+            self.testCls.get_task_status()
+            self.assertTrue(False)
+        except RuntimeError as r:
+            self.assertTrue(str(r).startswith("Could not find completed task"))
+
+    def test_get_task_status_has_failures(self):
+        self.testCls.conn = MagicMock()
+        self.testCls.conn.describe_tasks.return_value = {
+            "failures": [0],
+            "tasks": [
+                {"lastStatus": "STOPPED", "containers": [{"exitCode": 0}]}
+            ],
+        }
+        try:
+            self.testCls.get_task_status()
+            self.assertTrue(False)
+        except Exception as r:
+            self.assertTrue(str(r).startswith("There were failures"))
+
+    def test_get_task_status_not_all_stopped(self):
+        self.testCls.conn = MagicMock()
+        self.testCls.conn.describe_tasks.return_value = {
+            "failures": [],
+            "tasks": [
+                {"lastStatus": "RUNNING", "containers": [{"exitCode": 0}]}
+            ],
+        }
+        try:
+            self.testCls.get_task_status()
+            self.assertTrue(False)
+        except Exception as e:
+            self.assertTrue(str(e).startswith("Not all tasks finished"))
 
     def test_get_logs_info(self):
         self.testCls.conn = MagicMock()
@@ -71,7 +110,6 @@ class TestECSInteraction(unittest.TestCase):
         self.testCls.list_tasks(cluster="", desiredStatus="")
         self.assertTrue(True)  # Assert that this line is reached without error
 
-    # FIXME this can have more tests
     def test_run_task(self):
         self.testCls.conn = MagicMock()
         self.testCls.conn.describe_tasks.return_value = {
@@ -85,4 +123,30 @@ class TestECSInteraction(unittest.TestCase):
             "tasks": [{"taskArn": "any"}],
         }
         self.testCls.run_task(cluster="", task_definition="")
+        self.assertTrue(True)  # Assert that this line is reached without error
+
+    def test_run_task_more_parameters(self):
+        self.testCls.conn = MagicMock()
+        self.testCls.conn.describe_tasks.return_value = {
+            "failures": [],
+            "tasks": [
+                {"lastStatus": "STOPPED", "containers": [{"exitCode": 0}]}
+            ],
+        }
+        self.testCls.conn.run_task.return_value = {
+            "failures": None,
+            "tasks": [{"taskArn": "any"}],
+        }
+        self.testCls.run_task(
+            cluster="",
+            task_definition="",
+            command="test command",
+            environment="test environment",
+            cpu="test cpu",
+            memory="test memory",
+            memory_reservation="test memory reservation",
+            launch_type="FARGATE",
+            subnets="123,123",
+            security_groups="sec1,sec2",
+        )
         self.assertTrue(True)  # Assert that this line is reached without error
