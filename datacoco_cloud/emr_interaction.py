@@ -5,11 +5,10 @@ this module provides basic interaction with aws emr service
 import os
 import boto3
 from datacoco_cloud import UNIT_TEST_KEY
+from time import sleep
 import gevent.monkey
 
 gevent.monkey.patch_all()
-
-from time import sleep
 
 
 class EMRCluster(object):
@@ -36,8 +35,8 @@ class EMRCluster(object):
         if not is_test:
             self.conn = boto3.client(
                 "emr",
-                aws_access_key_id=aws_secret_access_key,
-                aws_secret_access_key=aws_access_key,
+                aws_access_key_id=aws_access_key,
+                aws_secret_access_key=aws_secret_access_key,
                 region_name=region_name,
             )
 
@@ -63,7 +62,9 @@ class EMRCluster(object):
         :param instance_type: default m5.xlarge
         :param owner_tag: owner name for cluster tagging
         :param project_tag: project name for cluster tagging
-        :param async_mode: default True, True will return right away, False polls until completion
+        :param async_mode: default True,
+            True will return right away,
+            False polls until completion
         :return:
         """
         if applications:
@@ -169,7 +170,8 @@ class EMRCluster(object):
         self, cluster_id, script_path, async_mode=True, args=[]
     ):  # nosec
         args_str = " ".join(args)
-
+        base_url = "us-east-1.elasticmapreduce"
+        jar = f"s3://{base_url}/libs/script-runner/script-runner.jar"
         response = self.conn.add_job_flow_steps(
             JobFlowId=cluster_id,
             Steps=[
@@ -177,7 +179,7 @@ class EMRCluster(object):
                     "Name": script_path.split("/")[-1],
                     "ActionOnFailure": "CANCEL_AND_WAIT",
                     "HadoopJarStep": {
-                        "Jar": "s3://us-east-1.elasticmapreduce/libs/script-runner/script-runner.jar",
+                        "Jar": jar,
                         "Args": (
                             "%s %s" % (script_path, str(args_str))
                         ).split(),
@@ -211,13 +213,15 @@ class EMRCluster(object):
     ):
         """
         :param cluster_id:
-        :param script_path: this will be either local on master node or s3://path
+        :param script_path: this will be either
+            local on master node or s3://path
         :param num_executors: default 2
         :param executor_memory: default 2G
         :param async_mode: default True,
             True will return right away,
             False polls until completion
-        :param args: a list object containing arbitrary arguments to spark script
+        :param args: a list object containing
+            arbitrary arguments to spark script
         :return:
         """
 
@@ -317,7 +321,7 @@ class EMRCluster(object):
         :return:
         """
         if cluster_name is None:
-            cluster_name = script_path[script_path.rfind("/") + 1 :]
+            cluster_name = script_path[script_path.rfind("/") + 1:]
         print("-------creating cluster")
         cluster_id, cluster_status, cluster_response = self.create_cluster(
             cluster_name,
