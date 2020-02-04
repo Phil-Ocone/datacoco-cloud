@@ -81,7 +81,7 @@ class TestECSInteraction(unittest.TestCase):
         }
         try:
             self.testCls.get_task_status()
-            self.assertTrue(False)
+            self.fail("There should be an error")
         except Exception as e:
             self.assertTrue(str(e).startswith("Not all tasks finished"))
 
