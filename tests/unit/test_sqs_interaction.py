@@ -45,10 +45,10 @@ class TestSQSInteraction(unittest.TestCase):
         self.testCls.get_queue_count()
         self.assertTrue(True)  # Assert that this line is reached without error
 
-    # def test_create_subscriber(self):
-    #     self.testCls.sqs = MagicMock()
-    #     self.testCls.create_subscriber()
-    #     self.assertTrue(True)  # Assert that this line is reached without error
+    def test_create_subscriber(self):
+        self.testCls.sqs = MagicMock()
+        self.testCls.create_subscriber()
+        self.assertTrue(True)  # Assert that this line is reached without error
 
     def test_send_message(self):
         self.testCls.sqs = MagicMock()
