@@ -20,7 +20,6 @@ class TestCWLInteraction(unittest.TestCase):
         self.testCls.parse_and_print_events(events="")
         self.assertTrue(True)  # Assert that this line is reached without error
 
-    # FIXME this can have more tests
     def test_get_log_events(self):
         self.testCls.client = MagicMock()
         self.testCls.client.get_log_events.return_value = {
@@ -29,3 +28,17 @@ class TestCWLInteraction(unittest.TestCase):
         }
         self.testCls.get_log_events(log_group="", log_stream="")
         self.assertTrue(True)  # Assert that this line is reached without error
+
+    def test_get_log_events_http_error(self):
+        self.testCls.client = MagicMock()
+        self.testCls.client.get_log_events.return_value = {
+            "ResponseMetadata": {"HTTPStatusCode": 500},
+            "events": [],
+        }
+        try:
+            self.testCls.get_log_events(log_group="", log_stream="")
+            self.assertTrue(False)
+        except ValueError as v:
+            self.assertTrue(True)  # Assert value error did happen
+
+
