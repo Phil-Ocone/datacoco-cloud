@@ -4,11 +4,11 @@ Cloud Watch Interaction tool
 import os
 import boto3
 from datacoco_cloud import UNIT_TEST_KEY
+from datetime import datetime
 import gevent.monkey
 
 gevent.monkey.patch_all()
 
-from datetime import datetime
 
 DATE_FMT = "%Y-%m-%d %H:%M:%S"
 
