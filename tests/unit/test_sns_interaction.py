@@ -39,6 +39,6 @@ class TestSNSInteraction(unittest.TestCase):
         }
         try:
             self.testCls.create_subscriber(sqs_interaction=MagicMock())
-            self.assertTrue(False)
+            self.fail("There should be an error")
         except ValueError as v:
             self.assertTrue(str(v).startswith("Topic does not exist"))
