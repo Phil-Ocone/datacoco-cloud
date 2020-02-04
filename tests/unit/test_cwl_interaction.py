@@ -39,4 +39,6 @@ class TestCWLInteraction(unittest.TestCase):
             self.testCls.get_log_events(log_group="", log_stream="")
             self.fail("There should be an error")
         except ValueError as v:
-            self.assertTrue(str(v) is not None)  # Assert value error did happen
+            self.assertTrue(
+                str(v) is not None
+            )  # Assert value error did happen
