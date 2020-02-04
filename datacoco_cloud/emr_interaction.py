@@ -321,7 +321,7 @@ class EMRCluster(object):
         :return:
         """
         if cluster_name is None:
-            cluster_name = script_path[script_path.rfind("/") + 1:]
+            cluster_name = script_path[script_path.rfind("/") + 1 :]
         print("-------creating cluster")
         cluster_id, cluster_status, cluster_response = self.create_cluster(
             cluster_name,

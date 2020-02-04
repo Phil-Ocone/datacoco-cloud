@@ -45,7 +45,7 @@ class Publisher(object):
         topic_list = self.client.list_topics()
 
         for t in topic_list["Topics"]:
-            if self.sns_topic == t["TopicArn"][-len(self.sns_topic):]:
+            if self.sns_topic == t["TopicArn"][-len(self.sns_topic) :]:
                 self.sns_topic_arn = t["TopicArn"]
 
         # check if topic exists
@@ -84,7 +84,7 @@ class Subscriber(object):
 
         for t in topic_list["Topics"]:
             # if self.sns_topic in t['TopicArn']:
-            if self.sns_topic == t["TopicArn"][-len(self.sns_topic):]:
+            if self.sns_topic == t["TopicArn"][-len(self.sns_topic) :]:
                 self.sns_topic_arn = t["TopicArn"]
                 print(f"Topic ARN: {self.sns_topic_arn}")
 
