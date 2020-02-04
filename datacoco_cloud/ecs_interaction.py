@@ -222,7 +222,8 @@ class ECSInteraction:
             }
 
             print(
-                f"Launch type is FARGATE so using network config: {network_config}"
+                "Launch type is FARGATE so using " +
+                f"network config: {network_config}"
             )
 
             response = self.conn.run_task(

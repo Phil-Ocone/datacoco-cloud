@@ -1,11 +1,10 @@
 import os
 from datacoco_cloud import UNIT_TEST_KEY
+import boto3
+from time import sleep
 import gevent.monkey
 
 gevent.monkey.patch_all()
-
-import boto3
-from time import sleep
 
 
 class AthenaInteraction:
@@ -30,7 +29,8 @@ class AthenaInteraction:
     def store_query(self, name, description, db, sql):
         """
         Allows a sql query to be saved to Athena for a given database
-        Will fail if a query of the same name already exists in the provided database
+        Will fail if a query of the same name
+            already exists in the provided database
         """
         existing_queries = self.list_queries()
         for query in existing_queries["NamedQueries"]:
@@ -131,7 +131,8 @@ class AthenaInteraction:
         """
         Will find query by its string name and return the sql and db name
         Optional vars allows dynamic variables to be passed to a saved query
-        Optional vars can be a list or tuple. Be sure to escape quotes for strings
+        Optional vars can be a list or tuple.
+            Be sure to escape quotes for strings
         """
         try:
             response = self.search_queries_by_name(query_name)

@@ -72,7 +72,8 @@ class S3Interaction:
         :param suffix: (str) Only fetch objects whose keys end with
             this suffix (optional).
 
-        :yield (boto3.resource.Bucket.objectsCollection) Next matching S3 object:
+        :yield (boto3.resource.Bucket.objectsCollection)
+            Next matching S3 object:
         """
         kwargs = {"Bucket": bucket}
 
@@ -192,7 +193,8 @@ class S3Interaction:
         :param dst_bucket: (str)
         :param dst_key: (str)
         :param move: (bool) If True, delete source key (optional).
-        :param overwrite: (bool) If True, do not overwrite dest key if exists (optional).
+        :param overwrite: (bool) If True,
+            do not overwrite dest key if exists (optional).
         """
 
         dst_exist = self.key_exists(dst_bucket, dst_key)
