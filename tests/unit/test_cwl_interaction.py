@@ -40,5 +40,3 @@ class TestCWLInteraction(unittest.TestCase):
             self.assertTrue(False)
         except ValueError as v:
             self.assertTrue(True)  # Assert value error did happen
-
-

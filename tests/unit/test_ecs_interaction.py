@@ -122,8 +122,7 @@ class TestECSInteraction(unittest.TestCase):
             "failures": None,
             "tasks": [{"taskArn": "any"}],
         }
-        self.testCls.run_task(cluster="",
-                              task_definition="")
+        self.testCls.run_task(cluster="", task_definition="")
         self.assertTrue(True)  # Assert that this line is reached without error
 
     def test_run_task_more_parameters(self):
@@ -138,15 +137,16 @@ class TestECSInteraction(unittest.TestCase):
             "failures": None,
             "tasks": [{"taskArn": "any"}],
         }
-        self.testCls.run_task(cluster="",
-                              task_definition="",
-                              command="test command",
-                              environment="test environment",
-                              cpu="test cpu",
-                              memory="test memory",
-                              memory_reservation="test memory reservation",
-                              launch_type="FARGATE",
-                              subnets="123,123",
-                              security_groups="sec1,sec2"
-                              )
+        self.testCls.run_task(
+            cluster="",
+            task_definition="",
+            command="test command",
+            environment="test environment",
+            cpu="test cpu",
+            memory="test memory",
+            memory_reservation="test memory reservation",
+            launch_type="FARGATE",
+            subnets="123,123",
+            security_groups="sec1,sec2",
+        )
         self.assertTrue(True)  # Assert that this line is reached without error
