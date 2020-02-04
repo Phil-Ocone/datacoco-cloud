@@ -3,12 +3,14 @@ Test SNS Interaction
 """
 import unittest
 from unittest.mock import MagicMock
-
-from datacoco_cloud import SNSInteraction
+import os
+from datacoco_cloud import UNIT_TEST_KEY
+from datacoco_cloud.sns_interaction import SNSInteraction
 
 
 class TestSNSInteraction(unittest.TestCase):
     def setUp(self):
+        os.environ[UNIT_TEST_KEY] = "True"
         self.testCls = SNSInteraction(
             aws_access_key="", aws_secret_key="", topic="any_topic"
         )  # nosec

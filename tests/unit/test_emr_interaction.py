@@ -4,11 +4,14 @@ Test EMR Interaction
 import unittest
 from unittest.mock import MagicMock
 
-from datacoco_cloud import EMRCluster
+import os
+from datacoco_cloud import UNIT_TEST_KEY
+from datacoco_cloud.emr_interaction import EMRCluster
 
 
 class TestEMRInteraction(unittest.TestCase):
     def setUp(self):
+        os.environ[UNIT_TEST_KEY] = "True"
         self.testCls = EMRCluster(
             aws_access_key="",
             temp_bucket="",

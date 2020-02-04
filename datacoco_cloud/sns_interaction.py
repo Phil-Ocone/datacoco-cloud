@@ -1,30 +1,30 @@
 import json
 import boto3
+import os
+from datacoco_cloud import UNIT_TEST_KEY
 
 
 class SNSInteraction:
     def __init__(
         self, aws_access_key, aws_secret_key, topic, region="us-east-1"
     ):
-        self.region = region
-        self.aws_access_key = aws_access_key
-        self.aws_secret_key = aws_secret_key
         self.topic = topic
         self.client = None
 
-    def init(self):
-        self.client = boto3.client(
-            "sns",
-            aws_access_key_id=self.aws_access_key,
-            aws_secret_access_key=self.aws_secret_key,
-            region_name=self.region,
-        )
-        return self
+        is_test = os.environ.get(UNIT_TEST_KEY, False)
+
+        if not is_test:
+            self.client = boto3.client(
+                "sns",
+                aws_access_key_id=aws_access_key,
+                aws_secret_access_key=aws_secret_key,
+                region_name=region,
+            )
 
     def create_topic(self):
         response = self.client.create_topic(Name=self.topic)
         topic_arn = response["TopicArn"]
-        print(f"Created topic ARN: {topic_arn}")  # nosec
+        print(f"Created topic ARN: {topic_arn}")
         return topic_arn
 
     def create_publisher(self):

@@ -3,12 +3,14 @@ Test SQS Interaction
 """
 import unittest
 from unittest.mock import MagicMock
-
-from datacoco_cloud import SQSInteraction
+import os
+from datacoco_cloud import UNIT_TEST_KEY
+from datacoco_cloud.sqs_interaction import SQSInteraction
 
 
 class TestSQSInteraction(unittest.TestCase):
     def setUp(self):
+        os.environ[UNIT_TEST_KEY] = "True"
         self.testCls = SQSInteraction(
             aws_access_key="", aws_secret_key="", queue_name=""
         )  # nosec

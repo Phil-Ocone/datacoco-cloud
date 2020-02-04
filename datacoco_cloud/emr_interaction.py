@@ -2,12 +2,14 @@
 """
 this module provides basic interaction with aws emr service
 """
+import os
+import boto3
+from datacoco_cloud import UNIT_TEST_KEY
 import gevent.monkey
 
 gevent.monkey.patch_all()
 
 from time import sleep
-import boto3
 
 
 class EMRCluster(object):
@@ -24,22 +26,20 @@ class EMRCluster(object):
         region_name="us-east-1",
         SLEEP_TIME=30,
     ):
-        self.aws_secret_access_key = aws_secret_access_key
-        self.aws_access_key = aws_access_key
-        self.region_name = region_name
         self.temp_bucket = "s3://" + temp_bucket + "/temp/emr/"
         self.env = env
         self.conn = None
         self.SLEEP_TIME = SLEEP_TIME
 
-    def init(self):
-        self.conn = boto3.client(
-            "emr",
-            aws_secret_key=self.aws_secret_access_key,
-            aws_access_key=self.aws_access_key,
-            region_name=self.region_name,
-        )
-        return self
+        is_test = os.environ.get(UNIT_TEST_KEY, False)
+
+        if not is_test:
+            self.conn = boto3.client(
+                "emr",
+                aws_access_key_id=aws_secret_access_key,
+                aws_secret_access_key=aws_access_key,
+                region_name=region_name,
+            )
 
     def create_cluster(
         self,
@@ -119,7 +119,7 @@ class EMRCluster(object):
                 "EmrManagedMasterSecurityGroup": "sg-78e8ae03",
                 "EmrManagedSlaveSecurityGroup": "sg-7ee8ae05",
                 "ServiceAccessSecurityGroup": "sg-7de8ae06",
-                "AdditionalMasterSecurityGroups": ["sg-a0b4d7c7",],
+                "AdditionalMasterSecurityGroups": ["sg-a0b4d7c7"],
             },
             JobFlowRole="EMR_EC2_DefaultRole",
             ServiceRole="EMR_DefaultRole",
@@ -182,7 +182,7 @@ class EMRCluster(object):
                             "%s %s" % (script_path, str(args_str))
                         ).split(),
                     },
-                },
+                }
             ],
         )
         status = "RUNNING"
@@ -246,7 +246,7 @@ class EMRCluster(object):
                             )
                         ).split(),
                     },
-                },
+                }
             ],
         )
         print(response)
@@ -285,7 +285,7 @@ class EMRCluster(object):
         :param cluster_id:
         :return:
         """
-        response = self.conn.terminate_job_flows(JobFlowIds=[cluster_id,])
+        response = self.conn.terminate_job_flows(JobFlowIds=[cluster_id])
         return response
 
     def kill_all_clusters(self):

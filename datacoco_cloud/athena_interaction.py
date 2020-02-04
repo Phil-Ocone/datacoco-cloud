@@ -1,3 +1,5 @@
+import os
+from datacoco_cloud import UNIT_TEST_KEY
 import gevent.monkey
 
 gevent.monkey.patch_all()
@@ -10,25 +12,20 @@ class AthenaInteraction:
     def __init__(self, aws_access_key, aws_secret_key, region=None):
         try:
             self.client = None
-            self.region = region
-            self.aws_access_key = aws_access_key
-            self.aws_secret_key = aws_secret_key
+
+            is_test = os.environ.get(UNIT_TEST_KEY, False)
+
+            if not is_test:
+                self.client = boto3.client(
+                    "athena",
+                    region_name=region,
+                    aws_access_key_id=aws_access_key,
+                    aws_secret_access_key=aws_secret_key,
+                )
+                print("Connected to Athena client")
+
         except Exception as e:
             raise e
-
-    def init(self):
-        """
-        Call to create instance for athena
-        :return:
-        """
-        self.client = boto3.client(
-            "athena",
-            region_name=self.region,
-            aws_access_key_id=self.aws_access_key,
-            aws_secret_access_key=self.aws_secret_key,
-        )
-        print("Connected to Athena client")
-        return self
 
     def store_query(self, name, description, db, sql):
         """

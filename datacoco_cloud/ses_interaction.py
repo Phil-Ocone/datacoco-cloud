@@ -1,5 +1,7 @@
 import boto3
+import os
 from past.builtins import basestring
+from datacoco_cloud import UNIT_TEST_KEY
 
 
 class SESInteraction:
@@ -21,9 +23,6 @@ class SESInteraction:
         :param subject:
         :return:
         """
-        self.aws_access_key = aws_access_key
-        self.aws_secret_key = aws_secret_key
-        self.aws_region = aws_region
         self.connection = None
         self.to = to
         self.subject = subject
@@ -32,14 +31,15 @@ class SESInteraction:
         self._format = "html"
         self.def_sender = sender
 
-    def init(self):
-        self.connection = boto3.client(
-            "ses",
-            aws_access_key_id=self.aws_access_key,
-            aws_secret_access_key=self.aws_secret_key,
-            region_name=self.aws_region,
-        )
-        return self
+        is_test = os.environ.get(UNIT_TEST_KEY, False)
+
+        if not is_test:
+            self.connection = boto3.client(
+                "ses",
+                aws_access_key_id=aws_access_key,
+                aws_secret_access_key=aws_secret_key,
+                region_name=aws_region,
+            )
 
     def html(self, html):
         """
