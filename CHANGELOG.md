@@ -8,7 +8,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.1.7] - 2020-02-04
 ### Changed
-    -
     - Fix Flake8 linter
     - Fix emr interaction boto3 key parameter another typo
 
@@ -27,10 +26,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.1.3] - 2020-01-25
 ### Changed
     - Readme.md to Readme.rst
+### Added
+    - Pull request template
+    - Tox
+    - Unit Tests
 
 ## [0.1.2] - 2020-01-23
 ### Added
-    - Readme and contributing guidline docs
+    - Readme and contributing guidelines docs
 
 ## [0.1.1] - 2020-01-23
 ### Added
