@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.1.8] - 2020-03-10
 ### Changed
-    - Add updates to athena_interaction from bitbucket
-    - Codacy fixes
+    - athena_interaction: Add "workgroup" parameters to repair_table() and run_existing_query()
+    - Codacy fixes: update pylintrc, use isintance() instead of type()
 
 ## [0.1.7] - 2020-02-04
 ### Changed
