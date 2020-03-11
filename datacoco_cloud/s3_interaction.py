@@ -172,10 +172,7 @@ class S3Interaction:
         """
         bucket = self.s3.Bucket(bucket)
         objects = list(bucket.objects.filter(Prefix=key))
-        if len(objects) > 0 and objects[0].key == key:
-            return True
-        else:
-            return False
+        return bool(len(objects) > 0 and objects[0].key == key)
 
     def move_key(
         self,
