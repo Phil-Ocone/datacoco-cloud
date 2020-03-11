@@ -5,8 +5,8 @@ datacoco-cloud
     :target: https://badge.fury.io/py/datacoco-cloud
     :alt: PyPI Version
 
-.. image:: https://readthedocs.org/projects/datacoco-cloud/badge/?version=latest
-    :target: https://datacoco-cloud.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/datacococloud/badge/?version=latest
+    :target: https://datacococloud.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
 .. image:: https://api.codacy.com/project/badge/Grade/8b768d9639a94456b8574158122f36ae
