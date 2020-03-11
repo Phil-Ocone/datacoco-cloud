@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.1.8] - 2020-03-10
+### Changed
+    - athena_interaction: Add "workgroup" parameters to repair_table() and run_existing_query()
+    - Codacy fixes: update pylintrc, use isintance() instead of type()
+
 ## [0.1.7] - 2020-02-04
 ### Changed
     - Fix Flake8 linter
@@ -44,6 +49,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     - Datacoco cloud classes
 
 
+[0.1.8]: https://github.com/equinoxfitness/datacoco-cloud/compare/v0.1.7...v0.1.8
 [0.1.7]: https://github.com/equinoxfitness/datacoco-cloud/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/equinoxfitness/datacoco-cloud/compare/v0.1.5...v0.1.6
 [0.1.5]: https://github.com/equinoxfitness/datacoco-cloud/compare/v0.1.4...v0.1.5
