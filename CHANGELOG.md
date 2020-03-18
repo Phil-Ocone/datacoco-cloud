@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.1.9] - 2020-03-18
+### Changed
+    - Support external package future minor versions
+
 ## [0.1.8] - 2020-03-10
 ### Changed
     - athena_interaction: Add "workgroup" parameters to repair_table() and run_existing_query()
@@ -49,6 +53,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     - Datacoco cloud classes
 
 
+[0.1.9]: https://github.com/equinoxfitness/datacoco-cloud/compare/v0.1.8...v0.1.9
 [0.1.8]: https://github.com/equinoxfitness/datacoco-cloud/compare/v0.1.7...v0.1.8
 [0.1.7]: https://github.com/equinoxfitness/datacoco-cloud/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/equinoxfitness/datacoco-cloud/compare/v0.1.5...v0.1.6
