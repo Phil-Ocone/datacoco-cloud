@@ -95,8 +95,9 @@ class AthenaInteraction:
             if partitions is None:
                 sql = "MSCK REPAIR TABLE {}".format(table)
             else:
-                if not isinstance(partitions, dict)\
-                        and not isinstance(partitions, list):
+                if not isinstance(partitions, dict) and not isinstance(
+                        partitions, list
+                ):
                     raise Exception(
                         "Partitions must be passed as a dict or list"
                     )
