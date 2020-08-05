@@ -95,14 +95,12 @@ class AthenaInteraction:
             if partitions is None:
                 sql = "MSCK REPAIR TABLE {}".format(table)
             else:
-                if (
-                    type(partitions) is not dict
-                    and type(partitions) is not list
-                ):
+                if not isinstance(partitions, dict)\
+                        and not isinstance(partitions, list):
                     raise Exception(
                         "Partitions must be passed as a dict or list"
                     )
-                if type(partitions) is list:
+                if isinstance(partitions, list):
                     part_str = ""
                     for d in partitions:
                         each_partition = ",".join(
@@ -110,7 +108,7 @@ class AthenaInteraction:
                         )
                         part_str += " partition ({})".format(each_partition)
                     sql = """ALTER TABLE {} add{}""".format(table, part_str)
-                elif type(partitions) is dict:
+                elif isinstance(partitions, list):
                     part_str = ",".join(
                         [i + "='" + partitions[i] + "'" for i in partitions]
                     )
