@@ -86,7 +86,6 @@ class AthenaInteraction:
         output_location=None,
         partitions=None,
         s3_data=None,
-        workgroup="primary",
     ):
         """
         Will try and load all partitions if none are specified
@@ -96,13 +95,14 @@ class AthenaInteraction:
             if partitions is None:
                 sql = "MSCK REPAIR TABLE {}".format(table)
             else:
-                if not isinstance(partitions, dict) and not isinstance(
-                    partitions, list
+                if (
+                    type(partitions) is not dict
+                    and type(partitions) is not list
                 ):
                     raise Exception(
                         "Partitions must be passed as a dict or list"
                     )
-                if isinstance(partitions, list):
+                if type(partitions) is list:
                     part_str = ""
                     for d in partitions:
                         each_partition = ",".join(
@@ -110,7 +110,7 @@ class AthenaInteraction:
                         )
                         part_str += " partition ({})".format(each_partition)
                     sql = """ALTER TABLE {} add{}""".format(table, part_str)
-                elif isinstance(partitions, list):
+                elif type(partitions) is dict:
                     part_str = ",".join(
                         [i + "='" + partitions[i] + "'" for i in partitions]
                     )
@@ -119,23 +119,14 @@ class AthenaInteraction:
                     )
                 if s3_data is not None:
                     sql += """ location '{}'""".format(s3_data)
-            results = self.exec_query(
-                query=sql,
-                db_name=db_name,
-                output_location=output_location,
-                workgroup=workgroup,
-            )
+            results = self.exec_query(sql, db_name, output_location)
 
             return results
         except Exception as e:
             raise e
 
     def run_existing_query(
-        self,
-        query_name,
-        output_location=None,
-        optional_vars=[],
-        workgroup="primary",
+        self, query_name, output_location=None, optional_vars=[]
     ):
         """
         Will find query by its string name and return the sql and db name
@@ -151,27 +142,26 @@ class AthenaInteraction:
             )
 
             print(sql, db, output_location)
-            results = self.exec_query(
-                query=sql,
-                db_name=db,
-                output_location=output_location,
-                workgroup=workgroup,
-            )
+            results = self.exec_query(sql, db, output_location)
 
             return results
 
         except Exception as e:
             raise e
 
-    def poll_for_results(self, query_execution_id, output_location):
+    def poll_for_results(
+        self,
+        query_execution_id,
+        output_location,
+        poll_interval=3,
+        max_poll_time=600,
+    ):
         """
         Initiate polling to ease network requests
         If query succeeds break and return results otherwise gracefully fail
         Poll every 3 seconds for 120 seconds
         """
         print("polling for results")
-        poll_interval = 3
-        max_poll_time = 600
 
         while True:
             execution_details = self.client.get_query_execution(
@@ -218,6 +208,8 @@ class AthenaInteraction:
         encryption="SSE_S3",
         kms_key="",
         workgroup="primary",
+        poll_interval=3,
+        max_poll_time=600,
     ):
         """
         Executes an athena query
@@ -257,7 +249,10 @@ class AthenaInteraction:
             )
         else:
             results, execution_details = self.poll_for_results(
-                response["QueryExecutionId"], output_location
+                response["QueryExecutionId"],
+                output_location,
+                poll_interval,
+                max_poll_time,
             )
 
         query_id = response["QueryExecutionId"]
