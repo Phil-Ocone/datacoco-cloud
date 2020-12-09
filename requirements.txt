@@ -1,4 +1,4 @@
 boto3==1.*
-requests==2.20
+requests==2.*
 gevent==1.*
 future==0.*
