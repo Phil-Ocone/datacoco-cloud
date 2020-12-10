@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.1.11] - 2020-12-10
+### Changed
+    - Fix dependencies with boto3 to >=1.9,<1.11
+
 ## [0.1.10] - 2020-08-05
 ### Changed
     - Set poll interval and max poll time for athena exec query
@@ -56,6 +60,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
     - Datacoco cloud classes
 
+[0.1.11]: https://github.com/equinoxfitness/datacoco-cloud/compare/v0.1.10...v0.1.11
 [0.1.10]: https://github.com/equinoxfitness/datacoco-cloud/compare/v0.1.9...v0.1.10
 [0.1.9]: https://github.com/equinoxfitness/datacoco-cloud/compare/v0.1.8...v0.1.9
 [0.1.8]: https://github.com/equinoxfitness/datacoco-cloud/compare/v0.1.7...v0.1.8
