@@ -28,7 +28,7 @@ setup(
       'boto3>=1.9,<1.11',
       'gunicorn==19.9.0',
       'greenlet==0.4.13',
-      'future==0.18.2'
+      'future==0.16.0'
     ],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
