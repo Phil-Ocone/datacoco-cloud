@@ -91,17 +91,19 @@ class AthenaInteraction:
         Will try and load all partitions if none are specified
         WARNING: Loading all partitions can be subject to long wait times
         """
+        sql = ''
         try:
             if partitions is None:
                 sql = "MSCK REPAIR TABLE {}".format(table)
             else:
-                if not isinstance(partitions, dict) and not isinstance(
-                    partitions, list
+                if (
+                        type(partitions) is not dict
+                        and type(partitions) is not list
                 ):
                     raise Exception(
                         "Partitions must be passed as a dict or list"
                     )
-                if isinstance(partitions, list):
+                if type(partitions) is list:
                     part_str = ""
                     for d in partitions:
                         each_partition = ",".join(
@@ -109,7 +111,7 @@ class AthenaInteraction:
                         )
                         part_str += " partition ({})".format(each_partition)
                     sql = """ALTER TABLE {} add{}""".format(table, part_str)
-                elif isinstance(partitions, list):
+                elif type(partitions) is dict:
                     part_str = ",".join(
                         [i + "='" + partitions[i] + "'" for i in partitions]
                     )
