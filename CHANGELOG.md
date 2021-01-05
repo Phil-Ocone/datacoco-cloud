@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.1.15] - 2021-01-05
+### Changed
+    - Fix build conflicts
+
 ## [0.1.14] - 2020-12-11
 ### Changed
     - athena_interaction: Revert fix lint that produces error
@@ -72,6 +76,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
     - Datacoco cloud classes
 
+[0.1.15]: https://github.com/equinoxfitness/datacoco-cloud/compare/v0.1.14...v0.1.15
 [0.1.14]: https://github.com/equinoxfitness/datacoco-cloud/compare/v0.1.13...v0.1.14
 [0.1.13]: https://github.com/equinoxfitness/datacoco-cloud/compare/v0.1.12...v0.1.13
 [0.1.12]: https://github.com/equinoxfitness/datacoco-cloud/compare/v0.1.11...v0.1.12
