@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.1.16] - 2021-03-25
+### Changed
+    - Upgraded version of `requests` to 2.25.1
+
 ## [0.1.15] - 2021-01-05
 ### Changed
     - Fix build conflicts
