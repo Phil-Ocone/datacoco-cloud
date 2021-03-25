@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     - s3_to_s3_interaction: ability to copy files from S3 Account to Another
     - s3_to_s3_interaction: ability to move files from S3 Account to Another
     
+## [0.1.16] - 2021-03-25
+### Changed
+    - Upgraded version of `requests` to 2.25.1
+
 ## [0.1.15] - 2021-01-05
 ### Changed
     - Fix build conflicts
