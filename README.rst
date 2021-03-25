@@ -34,6 +34,70 @@ datacoco-cloud requires Python 3.6+
     source <virtual env name>/bin/activate
     pip install datacoco-cloud
 
+Usage
+~~~~~
+
+S3toS3Interaction
+^^^^^^^^^^^^^^^^^
+
+Please take note that all AWS Permissions in `IAM` and `Bucket Policies` need to be properly in place for this utility to work.
+`Click here for more details <https://aws.amazon.com/premiumsupport/knowledge-center/cross-account-access-s3/>`_.
+
+Sample Code
+"""""""""""
+
+::
+
+    # Import the class first
+    from datacococloud.s3_to_s3_interaction import S3toS3Interaction
+    
+    # Instantiate with your key pairs
+    s3toS3 = S3toS3Interaction(<source_aws_key>,
+                               <source_aws_secret>,
+                               <target_aws_key>,
+                               <target_aws_secret>,
+                               <source_aws_region>(optional default='us-east-1'),
+                               <target_aws_region>(optional default='us-east-1')
+                               )
+
+    # Copying the files
+    s3toS3.duplicate_objects(<source_bucket>,
+                             <target_bucket>,
+                             <source_bucket_prefix>,
+                             <target_path>,
+                             <source_bucket_suffix>(optional default=''))
+
+
+    # Moving the files
+    # This deletes the file from the source after copying to the target
+    s3toS3.move_objects(<source_bucket>,
+                             <target_bucket>,
+                             <source_bucket_prefix>,
+                             <target_path>,
+                             <source_bucket_suffix>(optional default=''))
+
+Terms
+"""""
+* ``source_aws_key`` - AWS key ID from source account
+* ``source_aws_secret`` - AWS key secret from source account
+* ``target_aws_key`` - AWS key ID from target account
+* ``target_aws_secret`` - AWS key secret from target account
+* ``source_aws_region`` - AWS region of the source `S3` bucket 
+* ``target_aws_region`` - AWS region of the source `S3` bucket
+
+* ``source_bucket`` - S3 bucket of the source file
+* ``target_bucket`` - S3 bucket where the files are going to be transferred
+* ``source_bucket_prefix`` - The prefix of the files to transfer from the source
+    `Note:` Add ``/`` at the end to specify a folder e.g (`files/`)
+* ``target_path`` - the Path at the target bucket where the files will be transferred
+    `Note:` if the the folder does not exist, it will auto create it for you
+* ``source_bucket_prefix`` - The suffix of the files to transfer from the source
+
+
+
+
+
+
 Quickstart
 ----------
 
@@ -67,6 +131,8 @@ Testing
     pip install -r requirements_dev.txt
 
 To run the testing suite, simply run the command: ``tox`` or ``python -m unittest discover tests``
+
+
 
 Contributing
 ------------
