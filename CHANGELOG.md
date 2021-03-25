@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [0.1.16] - 2021-03-22
+## [0.1.17] - 2021-03-22
 ### Changed
     - Added new class S3toS3Interaction
     - s3_to_s3_interaction: ability to copy files from S3 Account to Another
