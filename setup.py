@@ -23,9 +23,9 @@ setup(
     author="Equinox Fitness",
     url="https://github.com/equinoxfitness/datacoco-cloud",
     install_requires=[
-      'requests==2.20.0',
+      'requests==2.25.1',
       'gevent==1.3.4',
-      'boto3>=1.9,<1.11',
+      'boto3>=1.9,<1.16.48',
       'gunicorn==19.9.0',
       'greenlet==0.4.13',
       'future==0.16.0'
