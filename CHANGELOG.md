@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.1.18] - 2021-03-29
+### Changed
+    - Upgraded version of requests and boto3 in install_requires of setup.py
+
 ## [0.1.17] - 2021-03-22
 ### Changed
     - Added new class S3toS3Interaction
