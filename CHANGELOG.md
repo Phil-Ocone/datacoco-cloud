@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.1.19] - 2021-04-12
+### Changed
+    - Upgrade future==0.16.0 to future==0.18.2
+
 ## [0.1.18] - 2021-03-29
 ### Changed
     - Upgraded version of requests and boto3 in install_requires of setup.py
@@ -15,7 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     - Added new class S3toS3Interaction
     - s3_to_s3_interaction: ability to copy files from S3 Account to Another
     - s3_to_s3_interaction: ability to move files from S3 Account to Another
-    
+
 ## [0.1.16] - 2021-03-25
 ### Changed
     - Upgraded version of `requests` to 2.25.1
