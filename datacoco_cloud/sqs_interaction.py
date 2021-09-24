@@ -78,6 +78,10 @@ class SQSInteraction:
         )["Attributes"]
 
     def set_policy(self, policy):
+        
+        print("POLICY SUMMARY")
+        print(policy)
+        
         self.sqs.set_queue_attributes(
             QueueUrl=self.sqs_queue_url,
             Attributes={"Policy": json.dumps(policy)},
