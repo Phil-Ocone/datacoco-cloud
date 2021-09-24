@@ -136,6 +136,9 @@ class Subscriber(object):
                 "aws:SourceArn"
             ] = self.sns_topic_arn
             policy["Statement"] = [statement]
+        
+        print("POLICY SUMMARY")
+        print(policy)
 
         self.sqsInteraction.set_policy(policy)
 
